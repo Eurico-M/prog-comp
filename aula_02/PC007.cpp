@@ -1,37 +1,46 @@
-// Usar um conjunto (song_set) para guardar as canções.
-// Antes de inserir, verificar se a canção já está no conjunto.
-// Se estiver, limpar o conjunto e só depois inserir.
-// Depois de inserir cada canção, guardar o maior tamanho do conjunto,
-// que é a maior sequência de canções únicas.
+// Tive ajuda do André Mendes, e gerei casos de teste com o DeepSeek (tinha erros em casos
+// privados).
 //
-// Inserir uma canção no conjunto: O(log n)
-// Determinar o tamanho: O(1)
-// Computar n canções: O(n.log n)
+// Manter um dicionário com as últimas posições de cada canção.
+// Quando se lê uma canção, verificar se já está no dicionário.
+// Se estiver, apagar do dicionário todas as canções com uma posição menor que essa canção
+// (incluindo a própria canção).
+//
+// Atualizar o dicionário.
+//
+// Verificar se o tamanho do dicionário é maior que a maior sequência, atualizando se necessário.
 
 #include <iostream>
-#include <set>
+#include <map>
 
 int main() {
     int nr_songs;
     std::cin >> nr_songs;
 
+    std::map<int,int> last_position;
     int longest_sequence = 1;
-    std::set<int> song_set;
 
     for (int i = 0; i < nr_songs; i++) {
         int song;
         std::cin >> song;
 
-        if (song_set.count(song) > 0) {
-            song_set.clear();
-            song_set.insert(song);
-        } else {
-            song_set.insert(song);
+        if (last_position.count(song) > 0) {
+            int cutoff = last_position[song];
+            for (auto it = last_position.begin(); it != last_position.end();) {
+                if (it->second <= cutoff) {
+                    it = last_position.erase(it);
+                } else {
+                    ++it;
+                }
+            }
         }
 
-        if (int(song_set.size()) > longest_sequence) {
-            longest_sequence = song_set.size();
+        last_position[song] = i;
+
+        if (int(last_position.size()) > longest_sequence) {
+            longest_sequence = int(last_position.size());
         }
+
     }
 
     std::cout << longest_sequence << std::endl;
