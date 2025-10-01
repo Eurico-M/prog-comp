@@ -1,3 +1,19 @@
+// Guardar os números numa estrutura Number que permite manter o valor decimal e a
+// representação binária (como número de 1's).
+//
+// O cálculo do número de 1's é feito com a função calculate_nr_ones quando se recebe o
+// input dos números: O(log n).
+//
+// Receber input, calcular representação binária, preencher vector: O(n.log n)
+//
+// Guardar estes Number num vector, e ordenar o vector com uma comparação compareNumbers:
+// primeiro ordenar o número de 1's por ordem decrescente,
+// e se forem iguais ordenar pelo valor do número.
+//
+// Usar sort() do C++: O(n.log n).
+//
+// Complexidade total: O(n.log n + n.log n) = O(n.log n);
+
 #include <bits/stdc++.h>
 #include <vector>
 using namespace std;
