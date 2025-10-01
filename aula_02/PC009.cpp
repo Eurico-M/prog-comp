@@ -1,5 +1,4 @@
-#include <iostream>
-#include <set>
+#include <bits/stdc++.h>
 using namespace std;
 
 int main() {
@@ -10,7 +9,6 @@ int main() {
 
     int x, n;
     cin >> x >> n;
-    cout << "test" << "\n";
 
     set<int> lights;
     lights.insert(0);
@@ -23,18 +21,16 @@ int main() {
         lights.insert(light);
 
         int longest_passage = 0;
-        int prev = *lights.begin();
-        cout << "--- i = " << i << "\n";
-        cout << "prev = " << prev << "\n";
 
-        for (auto it = ++lights.begin(); it != lights.end(); i++) {
-            int cur = *it;
-            cout << "cur = " << cur << "\n";
-            int passage = cur - prev;
-            if (passage > longest_passage) {
-                longest_passage = passage;
+        auto it = lights.begin();
+        for (int i = 0; i < int(lights.size()) - 1; i++) {
+            int a = *it;
+            ++it;
+            int b = *it;
+
+            if (b - a > longest_passage) {
+                longest_passage = b - a;
             }
-            prev = cur;
         }
 
         cout << longest_passage << " ";
