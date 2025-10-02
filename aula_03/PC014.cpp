@@ -2,6 +2,11 @@
 //
 // Função cost(k) calcula o custo de ter todos os edifícios à altura k: O(n).
 // Fazer uma pesquisa ternária para o k mínimo: O(log3 n).
+// A pesquisa ternária tem de ter um critério de paragem ligeiramente diferente porque,
+// como o espaço de pesquisa é discreto, a divisão ternária não pode ser aplicada a espaços
+// menores que 3.
+// Assim, quando reduzimos o espaço de possibilidades a 3 inteiros, fazemos uma pesquisa
+// linear nesses 3 inteiros.
 //
 // Complexidade total: O(t.n.log n)
 
@@ -30,9 +35,12 @@ int cost(vector<Building> buildings, int k) {
 }
 
 int my_ternary_search(vector<Building> buildings, int lower, int upper) {
-    while (lower < upper) {
+    while (upper - lower > 3) {
+        // int m1 = (2 * lower + upper) / 3;
+        // int m2 = (lower + 2 * upper) / 3;
+
         int m1 = lower + (upper - lower) / 3;
-        int m2 = lower + (upper - lower) * 2 / 3;
+        int m2 = upper - (upper - lower) / 3;
 
         int cost1 = cost(buildings, m1);
         int cost2 = cost(buildings, m2);
@@ -43,21 +51,32 @@ int my_ternary_search(vector<Building> buildings, int lower, int upper) {
         if (cost1 < cost2) {
             upper = m2;
         } else if (cost1 > cost2) {
-            lower = m1 + 1;
+            lower = m1;
         } else {
             lower = m1;
             upper = m2;
         }
     }
 
-    return lower;
+    int min_cost = cost(buildings, lower);
+    int k = lower;
+
+    for (int i = lower; i <= upper; i++) {
+        int c = cost(buildings, i);
+        if (c < min_cost) {
+            min_cost = c;
+            k = i;
+        }
+    }
+
+    return k;
 }
 
 
 int main() {
     // Fast IO
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    // ios_base::sync_with_stdio(false);
+    // cin.tie(NULL);
     //
 
     int nr_tests;
@@ -92,7 +111,7 @@ int main() {
 
         // test_print(buildings);
         int lower = 1;
-        int upper = highest_building + 1;
+        int upper = highest_building;
         // cout << "lower = " << lower << "   upper = " << upper << "\n";
 
         int k = my_ternary_search(buildings, lower, upper);
