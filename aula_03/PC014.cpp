@@ -15,8 +15,8 @@
 using namespace std;
 
 typedef struct {
-    int height;
-    int cost;
+    long height;
+    long cost;
 } Building;
 
 void test_print(vector<Building> v) {
@@ -26,24 +26,24 @@ void test_print(vector<Building> v) {
     }
 }
 
-int cost(vector<Building> buildings, int k) {
-    int cost = 0;
+long cost(vector<Building> buildings, long k) {
+    long cost = 0;
     for (auto x : buildings) {
         cost += abs(x.height - k) * x.cost;
     }
     return cost;
 }
 
-int my_ternary_search(vector<Building> buildings, int lower, int upper) {
+long my_ternary_search(vector<Building> buildings, long lower, long upper) {
     while (upper - lower > 3) {
-        // int m1 = (2 * lower + upper) / 3;
-        // int m2 = (lower + 2 * upper) / 3;
+        // long m1 = (2 * lower + upper) / 3;
+        // long m2 = (lower + 2 * upper) / 3;
 
-        int m1 = lower + (upper - lower) / 3;
-        int m2 = upper - (upper - lower) / 3;
+        long m1 = lower + (upper - lower) / 3;
+        long m2 = upper - (upper - lower) / 3;
 
-        int cost1 = cost(buildings, m1);
-        int cost2 = cost(buildings, m2);
+        long cost1 = cost(buildings, m1);
+        long cost2 = cost(buildings, m2);
 
         // cout << "m1 = " << m1 << " cost = " << cost1 << "\n";
         // cout << "m2 = " << m2 << " cost = " << cost2 << "\n";
@@ -58,11 +58,11 @@ int my_ternary_search(vector<Building> buildings, int lower, int upper) {
         }
     }
 
-    int min_cost = cost(buildings, lower);
-    int k = lower;
+    long min_cost = cost(buildings, lower);
+    long k = lower;
 
-    for (int i = lower; i <= upper; i++) {
-        int c = cost(buildings, i);
+    for (long i = lower; i <= upper; i++) {
+        long c = cost(buildings, i);
         if (c < min_cost) {
             min_cost = c;
             k = i;
@@ -79,18 +79,18 @@ int main() {
     // cin.tie(NULL);
     //
 
-    int nr_tests;
+    long nr_tests;
     cin >> nr_tests;
 
-    for (int i = 0; i < nr_tests; i++) {
-        int nr_buildings;
+    for (long i = 0; i < nr_tests; i++) {
+        long nr_buildings;
         cin >> nr_buildings;
 
         vector<Building> buildings;
-        int highest_building = 0;
+        long highest_building = 0;
 
-        for (int j = 0; j < nr_buildings; j++) {
-            int height_in;
+        for (long j = 0; j < nr_buildings; j++) {
+            long height_in;
             cin >> height_in;
 
             Building b;
@@ -103,18 +103,18 @@ int main() {
             }
         }
 
-        for (int j = 0; j < nr_buildings; j++) {
-            int cost_in;
+        for (long j = 0; j < nr_buildings; j++) {
+            long cost_in;
             cin >> cost_in;
             buildings[j].cost = cost_in;
         }
 
         // test_print(buildings);
-        int lower = 1;
-        int upper = highest_building;
+        long lower = 1;
+        long upper = highest_building;
         // cout << "lower = " << lower << "   upper = " << upper << "\n";
 
-        int k = my_ternary_search(buildings, lower, upper);
+        long k = my_ternary_search(buildings, lower, upper);
         cout << cost(buildings, k) << "\n";
     }
 
