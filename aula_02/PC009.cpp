@@ -1,19 +1,19 @@
-// Manter uma lista de dicionários.
-// Cada dicionário corresponde a uma configuração da rua com semáforos:
-// Antes de incluir semáforos, a rua é do tipo ({0,n},{n,0}), ou seja, no ponto 0 temos um
-// segmento livre de tamanho n, e no ponto n temos um segmento livre de tamanho 0.
+// Usar dois sets: o set positions guarda os números que já foram usados para colocar semáforos,
+// incluindo os extremos 0 e X. O multiset gaps guarda os intervalos entre os pontos em positions.
 //
-// Quando inserimos um semáforo na rua no ponto 2, o dicionário passa a ser:
-// ({0,2},{2,3},{5,0}), ou seja, no ponto 0 começa um segmento livre de tamanho 2, no ponto
-// 2 começa um segmento livre de tamanho 3, e no ponto 5 começa um segmento livre de tamanho 0.
+// Quando se recebe um novo semáforo (light), primeiro inserimo-lo em positions.
+// Usamos um iterador para descobrir o local onde o semáforo foi inserido, e encontramos
+// os valores imediatamente antes e imediatamente a seguir. Estes formam o segmento de estrada
+// modificado.
+// Calculamos o intervalo entre eles e removemos este intervalo do multiset gaps.
+// Calculamos dois novos intervalos, entre o novo semáforo inserido e cada um dos pontos vizinhos,
+// e colocamos estes novos intervalos no multiset gaps.
 //
-// Assim, para um qualquer ponto inserido no dicionário, só temos de mudar os dois pontos
-// adjacentes A e B (que é o equivalente a cortar esse segmento entre os pontos A e B, o resto
-// da rua mantém-se inalterada).
+// O maior segmento sem semáforos é o maior valor do multiset gaps,
+// que se pode obter directamente.
 //
-// Assim, podemos ter uma criação dos dicionários linearitmica, e noutro ciclo procurar em cada
-// dicionário qual o valor máximo dos intervalos, que também é uma operação linearítmica, e o
-// programa fica todo com complexidade O(n.log n).
+// Todas as operações com sets têm complexidade O(log n), logo o programa tem complexidade total
+// O(n.log n)
 
 #include <bits/stdc++.h>
 using namespace std;
@@ -27,44 +27,35 @@ int main() {
     int x, n;
     cin >> x >> n;
 
-    list<map<int,int>> street_over_time;
+    set<int> positions;
+    multiset<int> gaps;
 
-    map<int,int> initial_lights;
-    initial_lights.insert({0,x});
-    initial_lights.insert({x,0});
-
-    street_over_time.push_back(initial_lights);
+    positions.insert(0);
+    positions.insert(x);
+    gaps.insert(x);
 
     for (int i = 0; i < n; i++) {
         int light;
         cin >> light;
 
-        map<int,int> lights_at_certain_time;
-        lights_at_certain_time = street_over_time.back();
-        lights_at_certain_time.insert({light,0});
+        positions.insert(light);
 
-        auto it = lights_at_certain_time.find(light);
+        auto it = positions.find(light);
         auto prv = prev(it);
         auto nxt = next(it);
 
-        prv->second = light - prv->first;
-        it->second = nxt->first - light;
+        int gap_to_remove = *nxt - *prv;
+        auto remove_it = gaps.find(gap_to_remove);
+        gaps.erase(remove_it);
 
-        street_over_time.push_back(lights_at_certain_time);
-    }
+        int new_gap_before = light - *prv;
+        int new_gap_after = *nxt - light;
 
-    auto cur = street_over_time.begin();
-    cur++;
+        gaps.insert(new_gap_before);
+        gaps.insert(new_gap_after);
 
-    while (cur != street_over_time.end()) {
-        set<int> distances;
-        for (auto x : *cur) {
-            distances.insert(x.second);
-        }
-        auto max = distances.end();
-        max--;
-        cout << *max << " ";
-        cur++;
+        int largest_gap = *gaps.rbegin();
+        cout << largest_gap << " ";
     }
 
     cout << "\n";
