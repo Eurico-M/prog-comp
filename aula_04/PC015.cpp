@@ -2,6 +2,11 @@
 // https://cp-algorithms.com/data_structures/segment_tree.html#finding-the-maximum-and-the-number-of-times-it-appears
 // Fui ler este site (que o prof ligou no website), e tinha lá o caso exacto
 // deste exercício.
+//
+// Temos de modificar a segtree para guardar pares: o valor e a frequência desse valor.
+// Quando construímos a árvore, as frequências são 1 para todos os números.
+// No merge, escolhemos o maior dos números para passar para o nó pai.
+// Mas se os números forem iguais, então somamos a frequência.
 
 #include <bits/stdc++.h>
 
