@@ -93,7 +93,6 @@ int main() {
             left.erase(it);
         }
 
-
         number_to_remove = number;
 
         // manter a mediana correcta
