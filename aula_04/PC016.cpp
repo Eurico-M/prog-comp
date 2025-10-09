@@ -8,6 +8,8 @@
 // Colocar no novo map: o mais frequente, e os dois valores dos "extremos".
 //
 // Isto porque os "extremos" podem somar-se com os extremos de outros ramos da árvore.
+//
+// Como o elemento neutro é um map vazio, verificar maps vazios antes de aceder aos iteradores.
 
 #include <bits/stdc++.h>
 
@@ -20,7 +22,7 @@ using namespace std;
 const int MAX = 200005; // Capacity of Segment Tree
 const int MAX_ST = MAX * 4;
 
-const map<int,int> NEUTRAL = {{0,0}}; // Neutral element
+const map<int,int> NEUTRAL = {}; // Neutral element
 
 typedef map<int,int> st_value; // type of segment tree value
 
@@ -32,19 +34,21 @@ st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
 st_value merge(st_value a, st_value b) {
     map<int,int> return_map;
 
-    // calcular se o último elemento do map da direita é
-    // igual ao primeiro elemento do map da esquerda
-    auto last_a = a.end();
-    last_a--;
-    auto first_b = b.begin();
-
     int most_frequent = 0;
     int frequency = 0;
 
-    // se forem iguais, somar as frequencias e assumir como "mais frequente" para já
-    if (last_a->first == first_b->first) {
-        most_frequent = last_a->first;
-        frequency = last_a->second + first_b->second;
+    // calcular se o último elemento do map da direita é
+    // igual ao primeiro elemento do map da esquerda
+    if (!a.empty() && !b.empty()) {
+        auto last_a = a.end();
+        last_a--;
+        auto first_b = b.begin();
+
+        // se forem iguais, somar as frequencias e assumir como "mais frequente" para já
+        if (last_a->first == first_b->first) {
+            most_frequent = last_a->first;
+            frequency = last_a->second + first_b->second;
+        }
     }
 
     // verificar o valor mais frequente nos dois maps
@@ -64,13 +68,19 @@ st_value merge(st_value a, st_value b) {
 
     // preencher novo return_map com: o mais frequente,
     // o mais à esquerda do mapa esquerdo, e o mais à direita do mapa direito
-    auto first_a = a.begin();
-    auto last_b = b.end();
-    last_b--;
+    if (frequency > 0) {
+        return_map.insert({most_frequent, frequency});
+    }
 
-    return_map.insert({most_frequent, frequency});
-    return_map.insert(*first_a);
-    return_map.insert(*last_b);
+    if (!a.empty()) {
+        auto first_a = a.begin();
+        return_map.insert(*first_a);
+    }
+    if (!b.empty()) {
+        auto last_b = b.end();
+        last_b--;
+        return_map.insert(*last_b);
+    }
 
     return return_map;
 }
