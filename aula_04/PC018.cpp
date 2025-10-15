@@ -62,12 +62,29 @@ st_value query(int pos, int start, int end, int a, int b) {
     return merge(l, r);
 }
 
+void print_seg_tree() {
+    cout << "SegTree:\n";
+    int level = 0;
+    while (level <= (n / 2)) {
+        int nr_nodes = pow(2,level);
+        int node_number = nr_nodes;
+        for (int i = 0; i < nr_nodes; i++) {
+            cout << st[node_number] << " ";
+            node_number++;
+        }
+        cout << "\n";
+        level++;
+    }
+    cout << "----------\n";
+}
+
 // ---------------------------------------------------------
 
 int main() {
     int q;
     cin >> n >> q;
     vector<int> sequence;
+    sequence.push_back(0); // sentinela para sequence[0]
 
     for (int i = 0; i < n; i++) {
         int number;
@@ -79,6 +96,12 @@ int main() {
         int a, b, k;
         cin >> a >> b >> k;
 
+        // cout << "sequence: ";
+        // for (auto x : sequence) {
+        //     cout << x << " ";
+        // }
+        // cout << "\n";
+
         // construir array v como se fosse um booleano (>k)
         for (int j = 1; j <= n; j++) {
             if (sequence[j] > k) {
@@ -89,6 +112,12 @@ int main() {
         }
 
         build(1, 1, n);
+        // print_seg_tree();
+        // cout << "st array: ";
+        // for (int x = 1; x <= 3*n; x++) {
+        //     cout << st[x] << " ";
+        // }
+        // cout << "\n";
 
         cout << query(1, 1, n, a, b) << "\n";
     }

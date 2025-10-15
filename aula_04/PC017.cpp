@@ -1,9 +1,7 @@
-// Usar uma segtree para guardar o máximo de quartos livres.
-// Guardar os valores como pares para guardar também a posição original do hotel
-// (porque não posso usar a posição do array onde a segtree está guardada).
+// Usar uma segtree para guardar o máximo.
 //
-// Fazer uma pesquisa binária para encontrar o valor mais à esquerda que for maior ou igual
-// que o número de turistas que procura quarto.
+// Fazer uma pesquisa binária na segtree para encontrar o valor mais à esquerda por defeito
+// que for maior ou igual que o número de turistas que procura quarto.
 //
 // Fazer um update da segtree na posição encontrada na pesquisa anterior, com o valor da
 // diferença entre o número de turistas e o número de quartos livres.
@@ -21,9 +19,9 @@ using namespace std;
 const int MAX = 200005;   // Capacity of Segment Tree
 const int MAX_ST = MAX*4;
 
-const pair<int,int> NEUTRAL = {0,0};    // Neutral element
+const int NEUTRAL = 0;    // Neutral element
 
-typedef pair<int,int> st_value; // type of segment tree value
+typedef int64_t st_value; // type of segment tree value
 
 int n;               // Number of elements in the segtree
 st_value v[MAX];     // Array of values
@@ -31,11 +29,7 @@ st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
 
 // Merge contents of nodes a and b
 st_value merge(st_value a, st_value b) {
-    if (a.first >= b.first) {
-        return a;
-    } else {
-        return b;
-    }
+    return max(a,b);
 }
 
 // Build initial segtree (in position pos, interval [start,end])
@@ -82,7 +76,7 @@ int main() {
     for (int i=1; i<=n; i++) {
         int h;
         cin >> h;
-        v[i] = {h,i};
+        v[i] = h;
     }
 
     build(1, 1, n);
@@ -91,29 +85,38 @@ int main() {
         int tourists;
         cin >> tourists;
 
-        if (st[1].first < tourists) {
+        if (st[1] < tourists) {
             cout << 0;
 
         } else {
             // binary search na segment tree
             int cur = 1;
+            int start = 1;
+            int end = n;
             // cout << "start binary search cur=" << cur << "\n";
-            while (2 * cur < 2 * n) {
-                if (st[2 * cur].first >= tourists) {
+            while (start != end) {
+                int middle = start + (end-start)/2;
+
+                if (st[2 * cur] >= tourists) {
                     cur = 2 * cur;
-                } else if (st[2 * cur + 1].first >= tourists) {
-                    cur = 2 * cur + 1;
+                    end = middle;
+
                 } else {
-                    break;
+                    cur = 2 * cur + 1;
+                    start = middle + 1;
                 }
                 // cout << "cur=" << cur << "\n";
             }
 
-            pair<int,int> new_value = {st[cur].first-tourists, st[cur].second};
-            cout << new_value.second;
+            cout << start;
 
-            // cout << "\nupdate pos= " << new_value.second << " valor= " << new_value.first << "\n";
-            update(1, 1, n, new_value.second, new_value);
+            update(1, 1, n, start, st[cur] - tourists);
+
+            // cout << "Segtree (array):\n";
+            // for (int x = 1; x <= 2 * n - 1; x++) {
+            //     cout << st[x] << " ";
+            // }
+            // cout << "\n";
         }
 
         if (i < q - 1) {
