@@ -5,7 +5,7 @@ using namespace std;
 const int MAX = 200005;   // Capacity of Segment Tree
 const int MAX_ST = MAX*4;
 
-const vector<int> NEUTRAL = {};    // Neutral element
+const vector<int> NEUTRAL = {0};    // Neutral element
 
 typedef vector<int> st_value; // type of segment tree value
 
@@ -15,9 +15,9 @@ st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
 
 int max_middle(vector<int> v, int t) {
     int max = t;
-    for (auto it = v.begin() + 1; it < v.end() - 1; it++) {
-        if (*it > max) {
-            max = *it;
+    for (int i = 0; i < (int)v.size(); i++) {
+        if (i > 0 && i < (int)v.size() - 1 && i > max) {
+            max = v[i];
         }
     }
     return max;
@@ -39,16 +39,55 @@ st_value merge(st_value a, st_value b) {
     int first_b = a.size();
     int temp_max = 0;
 
+    // cout << "a:[";
+    // for (auto k : a) {
+    //     cout << " " << k;
+    // }
+    // cout << " ]\n";
+    // cout << "b:[";
+    // for (auto k : b) {
+    //     cout << " " << k;
+    // }
+    // cout << " ]\n";
+    // cout << "r_temp:[";
+    // for (auto k : r_temp) {
+    //     cout << " " << k;
+    // }
+    // cout << " ]\n";
+    // cout << "last_a = " << last_a << "\n";
+    // cout << "first_b = " << first_b << "\n";
+
     if (r_temp[last_a] > 0 && r_temp[first_b] > 0) {
         temp_max = r_temp[last_a] + r_temp[first_b];
-        r_temp.erase(r.begin() + last_a, r.begin() + first_b + 1);
+        // cout << "temp_max = "  << temp_max << "\n";
+        auto it = r_temp.begin();
+        r_temp.erase(it + last_a);
+        auto it2 = r_temp.begin();
+        r_temp.erase(it2 + last_a);
     }
 
-    int max = max_middle(r_temp, temp_max);
+    // cout << "r_temp:[";
+    // for (auto k : r_temp) {
+    //     cout << " " << k;
+    // }
+    // cout << " ]\n";
 
-    r.push_back(r_temp.front());
+    int max = max_middle(r_temp, temp_max);
+    // cout << "max = " << max << "\n";
+
+    if (!r_temp.empty()) {
+        r.push_back(r_temp.front());
+    }
     r.push_back(max);
-    r.push_back(r_temp.back());
+    if (!r_temp.empty()) {
+        r.push_back(r_temp.back());
+    }
+
+    // cout << "r:[";
+    // for (auto k : r) {
+    //     cout << " " << k;
+    // }
+    // cout << " ]\n";
 
     return r;
 }
@@ -114,6 +153,12 @@ int max_vector(vector<int> v) {
 
 
 int main() {
+
+    // Fast IO
+    // ios_base::sync_with_stdio(false);
+    // cin.tie(NULL);
+    //
+
     int q;
     cin >> n >> q;
 
@@ -131,13 +176,16 @@ int main() {
 
     build(1, 1, n);
 
-    // cout << "Segtree (array):\n";
-    // for (int x = 1; x <= 2 * n - 1; x++) {
-    //     auto t = st[x];
-    //     cout << x << ":[";
-    //     cout << get<0>(t) << "," << get<1>(t) << "," << get<2>(t) << "] ";
-    // }
-    // cout << "\n";
+    cout << "Segtree (array):\n";
+    for (int x = 1; x <= 4 * n; x++) {
+        auto t = st[x];
+        cout << x << ":[";
+        for (auto v : t) {
+            cout << " " << v;
+        }
+        cout << " ]";
+    }
+    cout << "\n";
 
     for (int i=1; i<=q; i++) {
         int op, a, b;
