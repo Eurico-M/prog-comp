@@ -5,45 +5,52 @@ using namespace std;
 const int MAX = 200005;   // Capacity of Segment Tree
 const int MAX_ST = MAX*4;
 
-const tuple<int, int, int> NEUTRAL = {0,0,0};    // Neutral element
+const vector<int> NEUTRAL = {};    // Neutral element
 
-typedef tuple<int, int, int> st_value; // type of segment tree value
+typedef vector<int> st_value; // type of segment tree value
 
 int n;               // Number of elements in the segtree
 st_value v[MAX];     // Array of values
 st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
 
-// Merge contents of nodes a and b
-st_value merge(st_value a, st_value b) {
-    int left_res, value_res, right_res;
-    int left_a, value_a, right_a;
-    int left_b, value_b, right_b;
-    tie(left_a, value_a, right_a) = a;
-    tie(left_b, value_b, right_b) = b;
-
-    if (right_a == 1 && left_b == 1) {
-        value_res = value_a + value_b;
-        left_res = left_a;
-        right_res = right_b;
-    } else {
-        value_res = max(value_a, value_b);
-        if (value_a > value_b) {
-            left_res = 1;
-            right_res = 0;
-        } else if (value_a < value_b) {
-            left_res = 0;
-            right_res = 1;
-        } else {
-            left_res = left_a;
-            right_res = right_b;
+int max_middle(vector<int> v, int t) {
+    int max = t;
+    for (auto it = v.begin() + 1; it < v.end() - 1; it++) {
+        if (*it > max) {
+            max = *it;
         }
     }
+    return max;
+}
 
-    tuple<int,int,int> result;
-    result = make_tuple(left_res, value_res, right_res);
+// Merge contents of nodes a and b
+st_value merge(st_value a, st_value b) {
+    vector<int> r_temp;
 
-    return result;
+    for (auto x : a) {
+        r_temp.push_back(x);
+    }
+    for (auto x : b) {
+        r_temp.push_back(x);
+    }
 
+    vector<int> r;
+    int last_a = a.size() - 1;
+    int first_b = a.size();
+    int temp_max = 0;
+
+    if (r_temp[last_a] > 0 && r_temp[first_b] > 0) {
+        temp_max = r_temp[last_a] + r_temp[first_b];
+        r_temp.erase(r.begin() + last_a, r.begin() + first_b + 1);
+    }
+
+    int max = max_middle(r_temp, temp_max);
+
+    r.push_back(r_temp.front());
+    r.push_back(max);
+    r.push_back(r_temp.back());
+
+    return r;
 }
 
 // Build initial segtree (in position pos, interval [start,end])
@@ -95,6 +102,17 @@ bool has_fortytwo(int n) {
     return false;
 }
 
+int max_vector(vector<int> v) {
+    int m = 0;
+    for (auto x : v) {
+        if (x > m) {
+            m = x;
+        }
+    }
+    return m;
+}
+
+
 int main() {
     int q;
     cin >> n >> q;
@@ -104,10 +122,10 @@ int main() {
         cin >> number;
 
         if (has_fortytwo(number)) {
-            v[i] = {1,1,1};
+            v[i] = {1};
             //cout << number << " has 42!\n";
         } else {
-            v[i] = {0,0,0};
+            v[i] = {0};
         }
     }
 
@@ -133,13 +151,12 @@ int main() {
                 update_value = 0;
             }
 
-            tuple<int,int,int> update_tuple = {update_value, update_value, update_value};
-            update(1, 1, n, a, update_tuple);
+            vector<int> update_vector = {update_value};
+            update(1, 1, n, a, update_vector);
 
         } else {
-            tuple<int,int,int> q_result = query(1, 1, n, a, b);
-            int result = get<1>(q_result);
-            cout << result << endl;
+            vector<int> q_result = query(1, 1, n, a, b);
+            cout << max_vector(q_result) << endl;
         }
     }
 
