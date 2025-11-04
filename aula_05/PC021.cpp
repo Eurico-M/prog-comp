@@ -15,7 +15,7 @@ void print_matrix(vector<vector<int>> m, int size) {
     }
 }
 
-int check_sums_at(vector<vector<int>> sums, int size, int pos_i, int pos_j) {
+int kadane(vector<vector<int>> sums, int size, int pos_i, int pos_j) {
     int max = -101;
 
     for (int i = 1; i <= pos_i; i++) {
@@ -40,6 +40,7 @@ int main() {
     int n;
     cin >> n;
 
+    // construir matriz e matriz de somas acumuladas
     vector<vector<int>> matrix(n + 1, vector<int>(n + 1, 0));
     vector<vector<int>> cumSums(n + 1, vector<int>(n + 1, 0));
 
@@ -58,16 +59,18 @@ int main() {
         }
     }
 
-    // cout << "Matrix:\n";
-    // print_matrix(matrix, n);
-    // cout << "\nCumSums:\n";
-    // print_matrix(cumSums, n);
+    cout << "Matrix:\n";
+    print_matrix(matrix, n);
+    cout << "\nCumSums:\n";
+    print_matrix(cumSums, n);
 
     int max_sum = -101;
 
+    // calcular para cada elemento da matriz de somas acumuladas
+    // a maior soma
     for (int i = 1; i <= n; i++) {
-        for (int j = 1; j <= n; j++) {
-            int sum_at = check_sums_at(cumSums, n, i, j);
+        for (int j = i; j <= n; j++) {
+            int sum_at = kadane(cumSums, n, i, j);
             if (sum_at > max_sum) {
                 max_sum = sum_at;
             }
