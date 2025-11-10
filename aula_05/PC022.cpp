@@ -1,11 +1,32 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-bool crossing(pair<int,int> p1, pair<int,int> p2) {
-    if ((p1.first-p2.first) * (p1.second-p2.second) < 0) {
-        return true;
+vector<int> tree;
+int maxIdx;
+
+void print_vector(vector<int> v) {
+    cout << "[";
+    for (auto k : v) {
+        cout << " " << k;
     }
-    return false;
+    cout << " ]\n";
+}
+
+int read(int idx) {
+    int sum = 0;
+    while (idx > 0) {
+        sum += tree[idx];
+        idx -= (idx & -idx);
+    }
+    return sum;
+}
+
+void update(int idx, int val) {
+    while (idx <= maxIdx) {
+        tree[idx] += val;
+        cout << "tree[" << idx << "]=" << tree[idx] << "\n";
+        idx += (idx & -idx);
+    }
 }
 
 int main() {
@@ -17,28 +38,27 @@ int main() {
     int n, m, k;
     cin >> n >> m >> k;
 
-    vector<pair<int,int>> roads;
+    maxIdx = m;
+    multimap<int,int> roads;
+    tree.assign(m+1, 0);
 
     for (int i = 0; i < k; i++) {
         int n1, m1;
         cin >> n1 >> m1;
-        roads.push_back({n1,m1});
+        roads.insert({n1, m1});
     }
 
-    for (int i = 0; i < k; i++) {
-        for (int j = i + 1; j < k; j++) {
-            pair<int,int> pair_1 = roads[i];
-            pair<int,int> pair_2 = roads[j];
-            cout << "checking (" << pair_1.first << "," << pair_1.second << ") with";
-            cout << " (" << pair_2.first << "," << pair_2.second << "): ";
-            bool cross = crossing(pair_1, pair_2);
-            if (cross) {
-                cout << "YES\n";
-            } else {
-                cout << "NO\n";
-            }
-        }
+
+    int crossing_sum = 0;
+    for (auto x : roads) {
+        cout << "{ " << x.first << " , " << x.second << " }\n";
+        crossing_sum += read(x.second);
+        cout << "crossing_sum=" << crossing_sum << "\n";
+        update(x.second, 1);
+        print_vector(tree);
     }
+
+    cout << crossing_sum << "\n";
 
     return 0;
 }
