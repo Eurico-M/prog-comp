@@ -46,7 +46,7 @@ int main() {
     // print_vector(alice_seq);
     // print_vector(bob_seq);
 
-    vector<vector<int>> dp (n+1, vector<int>(m+1, 0));
+    vector<vector<int>> dp (n+1, vector<int>(m+1, INF));
 
     // print_matrix(dp);
 
@@ -54,18 +54,22 @@ int main() {
     for (int i = 1; i <= n; i++) {
         for (int j = 1; j <= m; j++) {
             int multiplication = alice_seq[i-1] * bob_seq[j-1];
-            if (multiplication > 0) {
-                dp[i][j] = dp[i-1][j-1] + multiplication;
+            if (multiplication > 0 || multiplication > dp[i][j-1]) {
+                if (dp[i-1][j-1] < 0) {
+                    dp[i][j] = multiplication;
+                }
+                else {
+                    dp[i][j] = dp[i-1][j-1] + multiplication;
+                }
             } else {
                 dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
             }
         }
     }
 
-    print_matrix(dp);
+    //print_matrix(dp);
 
     cout << dp[n][m] << "\n";
-
 
     return 0;
 }
