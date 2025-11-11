@@ -20,12 +20,12 @@ void print_matrix(vector<vector<int>> m, int size) {
 }
 
 // soma de uma coluna j, desde i_start até i_end
-int column(vector<vector<int>> sums, int i_start, int i_end, int j) {
+int column(vector<vector<int>> & sums, int i_start, int i_end, int j) {
     return sums[i_end][j] - sums[i_start-1][j] - sums[i_end][j-1] + sums[i_start-1][j-1];
 }
 
 // kadane numa dimensão 'n', delimitada por duas linhas 'a' e 'b'
-int kadane(vector<vector<int>> sums, int size, int a, int b) {
+int kadane(vector<vector<int>> & sums, int size, int a, int b) {
     int current_sum = column(sums, a, b, 1);
     int best_sum = current_sum;
 
