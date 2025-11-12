@@ -1,9 +1,9 @@
+#include <algorithm>
 #include <bits/stdc++.h>
 #include <vector>
 using namespace std;
 
-#define INF 1000001
-#define OFFSET 1000
+#define INF 1e6 + 4
 
 vector<int> alice_seq;
 vector<int> bob_seq;
@@ -32,23 +32,31 @@ void receive_seq(vector<int> &seq, int sz) {
     }
 }
 
+// longest common subsequence, recursivo com memoization
+// i: índice na sequência da alice
+// j: índice na sequência do bob
 int lcs_rec(int i, int j) {
+    // caso base
+    // se uma ou ambas as sequências estiverem vazias.
+    // não pode ser zero porque podemos ter respostas negativas.
     if (i == 0 || j == 0) {
         return -INF;
     }
-
+    // memoization
+    // verificar na tabela dp se a resposta já foi calculada
     if (dp[i][j] != -INF) {
         return dp[i][j];
     }
-
-    int use_both;
-    if (lcs_rec(i-1, j-1) == -INF) {
-        use_both = alice_seq[i] * bob_seq[j];
-    } else {
-        use_both = alice_seq[i] * bob_seq[j] + lcs_rec(i-1, j-1);
-    }
-
-    return dp[i][j] = max(use_both, max(lcs_rec(i, j-1), lcs_rec(i-1,j)));
+    // 3 hipóteses:
+    // 1) usar os números dos índices indicados: o nosso valor total vai incrementar da multiplicação
+    // (ou vai ser melhor que um valor muito negativo), continuar a procurar em i-1, j-1
+    // 2) descartar o número 'j' do bob, continuar a procurar em i, j-1
+    // 3) descartar o número 'i' da alice, continuar a procurar em i-1, j
+    int use_both = max(alice_seq[i] * bob_seq[j] + lcs_rec(i-1, j-1), alice_seq[i] * bob_seq[j]);
+    int use_alice = lcs_rec(i, j-1);
+    int use_bob = lcs_rec(i-1, j);
+    // retornar e guardar o valor em dp ao mesmo tempo
+    return dp[i][j] = max(use_both, max(use_alice, use_bob));
 }
 
 int main() {
@@ -64,7 +72,7 @@ int main() {
     int m;
     cin >> m;
     receive_seq(bob_seq, m);
-
+    // tabela de memoization, usar 'inf' por causa dos valores negativos
     dp.assign(n+1, vector<int> (m+1, -INF));
 
     // cout << "checking vectors:\n";
