@@ -1,6 +1,5 @@
-#include <algorithm>
+
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 #define INF 1e6 + 4
