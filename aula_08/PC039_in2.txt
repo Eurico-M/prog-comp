@@ -1,0 +1,7 @@
+6
+DEF
+DEG
+DET
+EF
+FE
+T
