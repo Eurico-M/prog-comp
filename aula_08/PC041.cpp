@@ -9,7 +9,6 @@
 // Para fazer o output, ir guardando nos nós as jogadas feitas para chegar a esse nó.
 
 #include <bits/stdc++.h>
-#include <set>
 using namespace std;
 
 // nó do grafo: sequência de números e jogadas necessárias para chegar a essa sequência
