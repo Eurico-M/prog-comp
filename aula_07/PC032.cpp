@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
 void print_track(const int k, const vector<int> &t) {
     cout << "Track #" << k << "\n";
     for (int i = 0; i < (int)t.size(); i++) {
@@ -40,6 +41,7 @@ int main() {
             cin >> n >> v;
         }
         // print_track(i+1, track);
+        vector<vector<int>> dp ((int)track.size(), vector<int> ((int)acc/10 + 1, -1));
     }
 
     return 0;
