@@ -6,6 +6,7 @@ using namespace std;
 list<int> increments;
 vector<int> track;
 vector<vector<int>> dp;
+int finish_line;
 
 void print_dp() {
     cout << "DP:\n";
@@ -108,15 +109,15 @@ bool valid(int start_pos, int new_pos, int spd) {
 
 int solve(int pos, int spd) {
     cout << "pos=" << pos << " spd=" << spd << "\n";
-    if (pos >= (int)track.size()) {
-        return 0;
+    if (pos >= finish_line) {
+        return dp[pos][spd/10] = 0;
     }
 
     if (dp[pos][spd/10] != -1) {
         return dp[pos][spd/10];
     }
 
-    int min_moves = (int)track.size();
+    int min_moves = finish_line;
 
     for (int i : increments) {
         pair<int,int> move = new_move(i, pos, spd);
@@ -157,6 +158,7 @@ int main() {
             }
             cin >> n >> v;
         }
+        finish_line = track.size();
         buffer_track();
 
         init_dp();
@@ -164,6 +166,7 @@ int main() {
         cout << solve(0,0) << "\n";
 
         print_track();
+        cout << "finish line: " << finish_line << "\n";
         print_increments();
         print_dp();
 
