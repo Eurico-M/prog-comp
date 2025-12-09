@@ -99,7 +99,7 @@ bool valid(int start_pos, int new_pos, int spd) {
     if (new_pos <= 0 || spd <= 0) {
         return false;
     }
-    for (int i = start_pos; i <= new_pos; i++) {
+    for (int i = start_pos + 1; i <= new_pos; i++) {
         if (spd > track[i]) {
             return false;
         }
@@ -108,7 +108,7 @@ bool valid(int start_pos, int new_pos, int spd) {
 }
 
 int solve(int pos, int spd) {
-    cout << "pos=" << pos << " spd=" << spd << "\n";
+    //cout << "pos=" << pos << " spd=" << spd << "\n";
     if (pos >= finish_line) {
         return dp[pos][spd/10] = 0;
     }
@@ -123,9 +123,9 @@ int solve(int pos, int spd) {
         pair<int,int> move = new_move(i, pos, spd);
         int new_pos = move.first;
         int new_speed = move.second;
-        cout << "inc=" << i << " new pos=" << new_pos << " new spd=" << new_speed << "\n";
+        //cout << "inc=" << i << " new pos=" << new_pos << " new spd=" << new_speed << "\n";
         if (valid(pos, new_pos, new_speed)) {
-            cout << "valid\n";
+            //cout << "valid\n";
             min_moves = min(min_moves, solve(new_pos, new_speed));
         }
     }
@@ -165,10 +165,10 @@ int main() {
 
         cout << solve(0,0) << "\n";
 
-        print_track();
-        cout << "finish line: " << finish_line << "\n";
-        print_increments();
-        print_dp();
+        // print_track();
+        // cout << "finish line: " << finish_line << "\n";
+        // print_increments();
+        // print_dp();
 
     }
 
