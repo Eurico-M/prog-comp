@@ -23,7 +23,7 @@ int rows, cols;
 int bgs, sps;
 vector<vector<char>> mapa;
 vector<int> bridge_length;
-// vector<vector<int>> dp;
+vector<vector<int>> dp;
 
 list<pair<int,int>> nbrs = {
     {-1, 0},    // up
@@ -94,37 +94,38 @@ void calc_bridge_length() {
 
 int solve(int j, int b) {
 
+    // cout << "j=" << j << " b=" << b << "\n";
     if (b == 0) {
         // return dp[j][b] = 0;
         return 0;
     }
 
     if (j >= cols) {
-        // return dp[j][b] = INF;
-        return INF;
+        return dp[j][b] = INF;
+        // return INF;
     }
 
-    // if (dp[j][b] != -1) {
-    //     return dp[j][b];
-    // }
+    if (dp[j][b] != -1) {
+        return dp[j][b];
+    }
 
-    // return dp[j][b] = min((solve(j+sps, b-1) + bridge_length[j]), solve(j+1, b));
-    return min((solve(j+sps, b-1) + bridge_length[j]), solve(j+1, b));
+    return dp[j][b] = min((solve(j+1+sps, b-1) + bridge_length[j]), solve(j+1, b));
+    // return min((solve(j+1+sps, b-1) + bridge_length[j]), solve(j+1, b));
 }
 
 
 
 int main() {
     // Fast IO
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    // ios_base::sync_with_stdio(false);
+    // cin.tie(NULL);
     //
 
     cin >> rows >> cols;
     mapa.assign(rows + 2, vector<char> (cols + 2, 'x'));
     //print_mapa();
     cin >> bgs >> sps;
-    // dp.assign(cols, vector<int> (bgs, -1));
+    dp.assign(cols + sps + 2, vector<int> (bgs + 1, -1));
     
     for (int i = 1; i <= rows; i++) {
         string line;
@@ -137,7 +138,7 @@ int main() {
     // print_mapa();
 
     // bfs na margem norte
-    check_margins('N', 1,1);
+    check_margins('N', 1, 1);
     // bfs na margem sul
     check_margins('S', rows, 1);
 
