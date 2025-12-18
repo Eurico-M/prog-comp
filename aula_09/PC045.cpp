@@ -1,5 +1,16 @@
-// Exemplo de aplicacao do algoritmo de Dijkstra
-// (assumindo um grafo pesado e dirigido, sem pesos negativos)
+// Estrutura do Grafo do Professor Pedro Ribeiro das aulas de DAA.
+//
+// Usar Dijkstra na VCI. Cada nó guarda a melhor velocidade para k+1 hipóteses de renovações.
+// No exemplo do enunciado para 2 renovações, o nó 6 guardaria [22, 28, 40], as melhores velocidades
+// nesse nó com 0, 1, e 2 renovações.
+// Para calcular estes valores (relax_states), se estivermos a visitar um nó v e calcularmos
+// o valor de um seu vizinho w, então cada hipótese de renovação em w vai ser o máximo de:
+// 1) ou manter as renovações como estavam e usar a nova estrada v-w sem renovação,
+// 2) ou gastar uma renovação a menos até v, e aplicar essa renovação na estrada v-w (multiplicar aresta por 2).
+// (a excepção é no caso de 0 renovações, não podemos gastar menos de 0)
+// 
+// Como estamos à procura da velocidade máxima, iniciamos os nós com valor zero, excepto o nó
+// inicial, que tem velocidade infinita.
 
 #include <bits/stdc++.h>
 #include <climits>
@@ -63,7 +74,7 @@ public:
         
         // Inicializar "fila" com nó origem.
         for (int j = 0; j <= k; j++) {
-                nodes[s].speed[j] = (INT_MAX);
+                nodes[s].speed[j] = (INT_MAX/2);
             }
         set<pair<int, int>, greater<pair<int,int>>> q; // Fazer sort decrescente 
         q.insert({INT_MAX, s});

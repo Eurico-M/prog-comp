@@ -1,14 +1,14 @@
 // Seguir a receita da hint do professor:
 // 
-// Distinguir a margem Norte da margem Sul através de um BFS.
-// Calcular, para cada coluna, o custo de construir uma ponte nesse lugar.
+// Distinguir a margem Norte da margem Sul através de um BFS (check_margins)
+// Calcular, para cada coluna, o custo de construir uma ponte nesse lugar (calc_bridge_length)
 // Fazer uma recursão com DP: num estado solve(j, b), j é o índice da coluna, b é o número de pontes que
 // faltam construir.
 // A matriz DP guarda o tamanho mínimo da configuração de pontes nesse instante.
 // Para um estado qualquer, podemos tomar duas opções: 
-// Colocar uma ponte e prosseguir a partir do intervalo mínimo, 
+// 1) Colocar uma ponte e prosseguir a partir do intervalo mínimo, 
 // com menos uma ponte por construir (j+s, b-1). Acrescentar o custo da ponte.
-// Ou não construir a ponte, e prosseguir para a coluna seguinte (j+1, b).
+// 2) Ou não construir a ponte, e prosseguir para a coluna seguinte (j+1, b).
 // Os critérios de paragem são:
 // ou já não temos pontes para construir (b = 0), neste caso devolver 0 porque queremos esta solução.
 // ou ainda temos pontes por construir mas já chegámos ao fim do mapa (j >= cols), neste caso
@@ -96,8 +96,8 @@ int solve(int j, int b) {
 
     // cout << "j=" << j << " b=" << b << "\n";
     if (b == 0) {
-        // return dp[j][b] = 0;
-        return 0;
+        return dp[j][b] = 0;
+        //return 0;
     }
 
     if (j >= cols) {
@@ -142,11 +142,11 @@ int main() {
     // bfs na margem sul
     check_margins('S', rows, 1);
 
-    // print_mapa();
+    //print_mapa();
 
     calc_bridge_length();
 
-    // print_bridge_length();
+    //print_bridge_length();
 
     cout << solve(0, bgs) << "\n";
 
