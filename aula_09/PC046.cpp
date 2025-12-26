@@ -14,13 +14,14 @@
 
 using namespace std;
 
-#define INF INT_MAX
+#define INF LONG_LONG_MAX
+typedef long long ll;
 
 // Classe que representa um no
 class Node {
 public:
     list<pair<int, int>> adj;  // Lista de adjacencias
-    int distance;              // Distancia ao no origem da pesquisa
+    ll distance;              // Distancia ao no origem da pesquisa
     int parent;
     int visited;
 };
@@ -68,7 +69,7 @@ public:
     }
 
     // Bellman-Ford
-    int bellman_ford() {
+    ll bellman_ford() {
 
         // inicializar nós a -inf, estamos à procura da pontuação máxima
         for (int i = 1; i <= n; i++) {
@@ -103,7 +104,7 @@ public:
                 int score = e.second;
                 // cout << "aresta " << v << "-" << neighbour << "\n"; 
                 // retornar -1 só se o nó estiver envolvido no caminho de maior pontuação
-                if (reaches_n(neighbour, n) && reaches_n(1, neighbour) && nodes[v].distance + score > nodes[neighbour].distance) {
+                if (reaches_n(neighbour, n) && reaches_n(1, v) && nodes[v].distance + score > nodes[neighbour].distance) {
                     return -1;
                 }
             }
