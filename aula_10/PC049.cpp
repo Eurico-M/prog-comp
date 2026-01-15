@@ -166,8 +166,14 @@ int main()
     int n_lifeforms;
     cin >> n_lifeforms;
 
+    int newline_counter = 0;
+
     while (n_lifeforms > 0) {
-        cout << "--- CASE ---\n";
+        // cout << "--- CASE ---\n";
+        if (newline_counter > 0) {
+            cout << "\n";
+        }
+        newline_counter++;
         
         string concat = "";
         vector<int> stringID;
@@ -203,40 +209,123 @@ int main()
         cout << "String ID:\n";
         printArr(stringID, (int)stringID.size());
         
-        int more_than_half = floor(n_lifeforms/2) + 1;
+        int more_than_half = n_lifeforms/2 + 1;
         cout << "more than half = " << more_than_half << "\n";
 
-        // int l = 0;
-        // int r = 1000000;
 
-
-        // while (l < r) {
-        //     int m = l + (r - l) / 2;
-        //     bool possible = false;
-
-        //     if (possible) {
-        //         l = m;
-        //     }
-        //     else {
-        //         r = m - 1;
-        //     }
-
-        // }
-
-
-        // vector<pair<string,pair<int,int>>> prefix_strings;
+        map<string,set<int>> all_prefix_strings;
+        // string prev = "";
 
         // for (int k = 0; k < n; k++) {
         //     if (lcp[k] > 0) {
         //         string p = concat.substr(suffixArr[k], lcp[k]);
+        //         cout << "encontrei sufixo: " << p << "\n";
         //         int id1 = stringID[suffixArr[k]];
         //         int id2 = stringID[suffixArr[k+1]];
 
-        //         prefix_strings.push_back({p,{id1, id2}});
+        //         if (p != prev) {
+        //             all_prefix_strings.insert({p,{id1, id2}});
+        //         }
+        //         else {
+        //             set<int> temp_set = all_prefix_strings[p];
+        //             temp_set.insert(id1);
+        //             temp_set.insert(id2);
+        //             all_prefix_strings[p] = temp_set;
+        //         }
+
+        //         prev = p;
         //     }
         // }
 
+        int k = 0;
 
+        while (k < n) {
+
+            if (lcp[k] == 0) {
+                k++;
+                continue;
+            }
+            
+            // Start of a group with common prefix
+            int group_start = k;
+            int min_lcp_in_group = lcp[k];
+            
+            // First, collect all string IDs in this group
+            set<int> strings_in_group;
+            
+            // Add the first string (at position group_start)
+            if (stringID[suffixArr[k]] != -1) {
+                strings_in_group.insert(stringID[suffixArr[k]]);
+            }
+            
+            // Expand the group while LCP > 0
+            while (k < n && lcp[k] > 0) {
+                // Update minimum LCP in this group
+                if (lcp[k] < min_lcp_in_group) {
+                    min_lcp_in_group = lcp[k];
+                }
+                
+                // Add the current string (at position k+1)
+                if (stringID[suffixArr[k+1]] != -1) {
+                    strings_in_group.insert(stringID[suffixArr[k+1]]);
+                }
+                
+                k++;
+            }
+            
+            // Now we have a complete group from group_start to k
+            // Add all prefixes of lengths from min_lcp_in_group down to 1
+            
+            if (min_lcp_in_group > 0 && !strings_in_group.empty()) {
+                // Get the starting position of the first suffix in the group
+                int start_pos = suffixArr[group_start];
+                
+                // Extract the common prefix
+                string common_prefix = concat.substr(start_pos, min_lcp_in_group);
+                
+                // // Remove any separators from the prefix
+                // common_prefix.erase(remove_if(common_prefix.begin(), common_prefix.end(), 
+                //     [](char c) { return c >= 128; }), common_prefix.end());
+                
+                if (!common_prefix.empty()) {
+                    // Check if this prefix already exists in our map
+                    if (all_prefix_strings.find(common_prefix) == all_prefix_strings.end()) {
+                        all_prefix_strings[common_prefix] = strings_in_group;
+                    } else {
+                        // Merge the string sets
+                        for (int id : strings_in_group) {
+                            all_prefix_strings[common_prefix].insert(id);
+                        }
+                    }
+                }
+            }
+        }
+
+        multimap<int,string,greater<int>> mth_prefix_strings;
+        for (auto x : all_prefix_strings) {
+            string prefix = x.first;
+            int prefix_size = prefix.length();
+            set<int> diff_strings = x.second;
+            int set_size = diff_strings.size();
+
+            cout << "- prefixo '" << prefix << "' ocorre em " << set_size << " strings\n";
+
+            if (set_size >= more_than_half) {
+                mth_prefix_strings.insert({prefix_size, prefix});
+            } 
+        }
+
+        if (mth_prefix_strings.empty()) {
+            cout << "?\n";
+        }
+        else {
+            auto it = mth_prefix_strings.begin();
+            int max_length = it->first;
+            while (it != mth_prefix_strings.end() && it->first == max_length) {
+                cout << it->second << "\n";
+                it = next(it);
+            }
+        }
 
         cin >> n_lifeforms;
     }

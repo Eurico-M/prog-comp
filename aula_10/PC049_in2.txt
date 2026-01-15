@@ -1,8 +1,6 @@
-6
-aab
-aac
-daa
-eaa
-aaf
-gaa
+4
+ab
+ab
+ac
+ac
 0
