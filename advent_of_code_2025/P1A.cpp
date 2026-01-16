@@ -10,24 +10,20 @@ int main() {
     string line;
     int dial = 50;
     int password = 0;
-
+    
+    // ler input linha a linha
     while (getline(cin, line)) {
+        // separar letra e número
         char dir = line[0];
         string nStr = line.substr(1);
         int n = stoi(nStr);
-
-        cout << "- Dial is rotated " << dir << n << "\n";
-        
+        // número negativo se for para a esquerda
         if (dir == 'L') {
             n = -n;
         }
-
-        cout << " goes to " << dial + n << "\n";
-
+        // fazer rotação em base 100
         dial = (dial + n) % 100;
-
-        cout << " which means " << dial << "\n";
-
+        // se parar no zero, contar
         if (dial == 0) {
             password++;
         }
