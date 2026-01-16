@@ -15,12 +15,18 @@ int main() {
         char dir = line[0];
         string nStr = line.substr(1);
         int n = stoi(nStr);
+
+        cout << "- Dial is rotated " << dir << n << "\n";
         
         if (dir == 'L') {
             n = -n;
         }
 
+        cout << " goes to " << dial + n << "\n";
+
         dial = (dial + n) % 100;
+
+        cout << " which means " << dial << "\n";
 
         if (dial == 0) {
             password++;
