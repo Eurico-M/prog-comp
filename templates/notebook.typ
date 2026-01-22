@@ -1,8 +1,8 @@
 #set page(
     paper: "a4",
-    flipped: true,
+    flipped: true,  // landscape
     columns: 2,
-    margin: 1.5cm,
+    margin: 1cm,
     numbering: "1/1"
 )
 
@@ -14,6 +14,7 @@
 #import "@preview/zebraw:0.6.1": *
 #show: zebraw
 
+// ----- INÍCIO DO DOCUMENTO ----- //
 == Counting Sort
 ```
 count[max size] ← frequencies array
@@ -58,10 +59,7 @@ return(low)
 ```
 == Ternary search
 ```
-// a: left edge of interval
-// b: right edge of interval
-// f: function
-// epsilon: tolerance
+// a: left edge of interval, b: right edge of interval, f: function, epsilon: tolerance
 input a, b, f, epsilon
 l ← a
 r ← b
@@ -143,8 +141,7 @@ int main() {
         cin >> op >> a >> b;
         if (op == 1) update(1, 1, n, a, b);
         else cout << query(1, 1, n, a, b) << endl;
-    }
-    
+    }    
     return 0;
 }
 ```
@@ -350,22 +347,22 @@ public:
         q.push({s, INT_MAX});    // inicializar com no origem e capacidade infinita
 
         while (!q.empty()) {
-        // returar primeiro no da fila
-        int cur = q.front().first;
-        int flow = q.front().second;
-        q.pop();
+            // returar primeiro no da fila
+            int cur = q.front().first;
+            int flow = q.front().second;
+            q.pop();
 
-        // percorrer nos adjacentes ao no atual (cur)
-        for (int next : adj[cur]) {
-            // se o vizinho ainda nao foi visitado (parent==-1)
-            // e a aresta respetiva ainda tem capacidade para passar fluxo
-            if (parent[next] == -1 && cap[cur][next]>0) {
-            parent[next] = cur;                        // atualizar pai
-            int new_flow = min(flow, cap[cur][next]);  // atualizar fluxo
-            if (next == t) return new_flow;            // chegamos ao final?
-            q.push({next, new_flow});                  // adicionar a fila
+            // percorrer nos adjacentes ao no atual (cur)
+            for (int next : adj[cur]) {
+                // se o vizinho ainda nao foi visitado (parent==-1)
+                // e a aresta respetiva ainda tem capacidade para passar fluxo
+                if (parent[next] == -1 && cap[cur][next]>0) {
+                    parent[next] = cur;                        // atualizar pai
+                    int new_flow = min(flow, cap[cur][next]);  // atualizar fluxo
+                    if (next == t) return new_flow;            // chegamos ao final?
+                        q.push({next, new_flow});                  // adicionar a fila
+                }
             }
-        }
         }
         
         return 0;
@@ -378,22 +375,22 @@ public:
         vector<int> parent(n+1);  // vetor de pais (permite reconstruir caminho)
         
         while (true) {
-        int new_flow = bfs(s, t, parent); // fluxo de um caminho de aumento
-        if (new_flow == 0) break;         // se nao existir, terminar
+            int new_flow = bfs(s, t, parent); // fluxo de um caminho de aumento
+            if (new_flow == 0) break;         // se nao existir, terminar
 
-        // imprimir fluxo e caminho de aumento
-        cout << "Caminho de aumento: fluxo " << new_flow << " | " << t;
-        
-        flow += new_flow;  // aumentar fluxo total com fluxo deste caminho
-        int cur = t;
-        while (cur != s) { // percorrer caminho de aumento e alterar arestas
-            int prev = parent[cur];	
-            cap[prev][cur] -= new_flow;
-            cap[cur][prev] += new_flow;
-            cur = prev;
-            cout << " <- " << cur; // imprimir proximo no do caminho
-        }
-        cout << endl;
+            // imprimir fluxo e caminho de aumento
+            cout << "Caminho de aumento: fluxo " << new_flow << " | " << t;
+            
+            flow += new_flow;  // aumentar fluxo total com fluxo deste caminho
+            int cur = t;
+            while (cur != s) { // percorrer caminho de aumento e alterar arestas
+                int prev = parent[cur];	
+                cap[prev][cur] -= new_flow;
+                cap[cur][prev] += new_flow;
+                cur = prev;
+                cout << " <- " << cur; // imprimir proximo no do caminho
+            }
+            cout << endl;
         }
         
         return flow;
@@ -448,45 +445,39 @@ public:
     }
 
     // Algoritmo de Dijkstra
-    void dijkstra(int s) {
-        
+    void dijkstra(int s) {        
         //Inicializar nos como nao visitados e com distancia infinita
         for (int i=1; i<=n; i++) {
-        nodes[i].distance = INT_MAX;
-        nodes[i].visited  = false;
-        }
-        
+            nodes[i].distance = INT_MAX;
+            nodes[i].visited  = false;
+        }        
         // Inicializar "fila" com no origem
         nodes[s].distance = 0;
         set<pair<int, int>> q; // By "default" um par e comparado pelo primeiro elemento 
         q.insert({0, s});      // Criar um par (dist=0, no=s)
-
         // Ciclo principal do Dijkstra
         while (!q.empty()) {
-        
-        // Retirar no com menor distancia (o "primeiro" do set, que e uma BST)
-        int u = q.begin()->second;
-        q.erase(q.begin());
-        nodes[u].visited = true;
-        cout << u << " [dist=" << nodes[u].distance << "]" << endl;
-
-        // Relaxar arestas do no retirado
-        for (auto edge : nodes[u].adj) {
-            int v = edge.first;
-            int cost = edge.second;
-            if (!nodes[v].visited && nodes[u].distance + cost < nodes[v].distance) {
-            q.erase({nodes[v].distance, v});  // Apagar do set
-            nodes[v].distance = nodes[u].distance + cost;
-            q.insert({nodes[v].distance, v}); // Inserir com nova (e menor) distancia
+            // Retirar no com menor distancia (o "primeiro" do set, que e uma BST)
+            int u = q.begin()->second;
+            q.erase(q.begin());
+            nodes[u].visited = true;
+            cout << u << " [dist=" << nodes[u].distance << "]" << endl;
+            // Relaxar arestas do no retirado
+            for (auto edge : nodes[u].adj) {
+                int v = edge.first;
+                int cost = edge.second;
+                if (!nodes[v].visited && nodes[u].distance + cost < nodes[v].distance) {
+                    q.erase({nodes[v].distance, v});  // Apagar do set
+                    nodes[v].distance = nodes[u].distance + cost;
+                    q.insert({nodes[v].distance, v}); // Inserir com nova (e menor) distancia
+                }
             }
-        }
         }
     }
 };
 
 int main() {
-    int n, e, a, b, c;
-    
+    int n, e, a, b, c;    
     cin >> n;
     Graph g(n);
     cin >> e;
@@ -494,10 +485,8 @@ int main() {
         cin >> a >> b >> c;
         g.addLink(a, b, c);
     }
-
     // Execucao exemplo a partir do no 1
     g.dijkstra(1);
-
     return 0;
 }
 ```
@@ -708,8 +697,7 @@ int n, m, v;
 vector<Edge> edges;
 const int INF = 1000000000;
 
-void solve()
-{
+void solve() {
     vector<int> d(n, INF);
     d[v] = 0;
     for (;;) {
@@ -730,8 +718,7 @@ void solve()
 ```
 === Retrieving Path
 ```cpp
-void solve()
-{
+void solve() {
     vector<int> d(n, INF);
     d[v] = 0;
     vector<int> p(n, -1);
@@ -765,8 +752,7 @@ void solve()
 ```
 === Negative Cycle
 ```cpp
-void solve()
-{
+void solve() {
     vector<int> d(n, INF);
     d[v] = 0;
     vector<int> p(n, -1);
@@ -880,8 +866,7 @@ struct TrieNode {
 };
 
 // Returns new trie node (initialized to NULLs)
-struct TrieNode* getNode(void)
-{
+struct TrieNode* getNode(void) {
     struct TrieNode* pNode = new TrieNode;
 
     pNode->isEndOfWord = false;
@@ -894,8 +879,7 @@ struct TrieNode* getNode(void)
 
 // If not present, inserts key into trie
 // If the key is prefix of trie node, just marks leaf node
-void insert(struct TrieNode* root, string key)
-{
+void insert(struct TrieNode* root, string key) {
     struct TrieNode* pCrawl = root;
 
     for (int i = 0; i < key.length(); i++) {
@@ -911,8 +895,7 @@ void insert(struct TrieNode* root, string key)
 }
 
 // Returns true if key presents in trie, else false
-bool search(struct TrieNode* root, string key)
-{
+bool search(struct TrieNode* root, string key) {
     struct TrieNode* pCrawl = root;
 
     for (int i = 0; i < key.length(); i++) {
@@ -927,8 +910,7 @@ bool search(struct TrieNode* root, string key)
 }
 
 // Returns true if root has no children, else false
-bool isEmpty(TrieNode* root)
-{
+bool isEmpty(TrieNode* root) {
     for (int i = 0; i < ALPHABET_SIZE; i++)
         if (root->children[i])
             return false;
@@ -936,25 +918,20 @@ bool isEmpty(TrieNode* root)
 }
 
 // Recursive function to delete a key from given Trie
-TrieNode* remove(TrieNode* root, string key, int depth = 0)
-{
+TrieNode* remove(TrieNode* root, string key, int depth = 0) {
     // If tree is empty
     if (!root)
         return NULL;
-
     // If last character of key is being processed
     if (depth == key.size()) {
-
         // This node is no more end of word after removal of given key
         if (root->isEndOfWord)
             root->isEndOfWord = false;
-
         // If given is not prefix of any other word
         if (isEmpty(root)) {
             delete (root);
             root = NULL;
         }
-
         return root;
     }
 
@@ -974,8 +951,7 @@ TrieNode* remove(TrieNode* root, string key, int depth = 0)
 }
 
 // Driver
-int main()
-{
+int main() {
     // Input keys (use only 'a' through 'z' and lower case)
     string keys[] = { "the", "a", "there",
                       "answer", "any", "by",
@@ -1021,8 +997,7 @@ const int MAXS = 500;
 const int MAXC = 26;
 
 // OUTPUT FUNCTION IS IMPLEMENTED USING out[]
-// Bit i in this mask is one if the word with index i
-// appears when the machine enters this state.
+//Bit i in this mask is 1 if the word with idx i appears when the machine enters this state.
 int out[MAXS];
 
 // FAILURE FUNCTION IS IMPLEMENTED USING f[]
@@ -1037,8 +1012,7 @@ int g[MAXS][MAXC];
 //         in the text.
 // Returns the number of states that the built machine has.
 // States are numbered 0 up to the return value - 1, inclusive.
-int buildMatchingMachine(string arr[], int k)
-{
+int buildMatchingMachine(string arr[], int k) {
     // Initialize all values in output function as 0.
     memset(out, 0, sizeof out);
 
@@ -1050,16 +1024,13 @@ int buildMatchingMachine(string arr[], int k)
 
     // Construct values for goto function, i.e., fill g[][]
     // This is same as building a Trie for arr[]
-    for (int i = 0; i < k; ++i)
-    {
+    for (int i = 0; i < k; ++i) {
         const string &word = arr[i];
         int currentState = 0;
 
         // Insert all characters of current word in arr[]
-        for (int j = 0; j < word.size(); ++j)
-        {
+        for (int j = 0; j < word.size(); ++j) {
             int ch = word[j] - 'a';
-
             // Allocate a new node (create a new state) if a
             // node for ch doesn't exist.
             if (g[currentState][ch] == -1)
@@ -1089,37 +1060,30 @@ int buildMatchingMachine(string arr[], int k)
     queue<int> q;
 
      // Iterate over every possible input
-    for (int ch = 0; ch < MAXC; ++ch)
-    {
+    for (int ch = 0; ch < MAXC; ++ch) {
         // All nodes of depth 1 have failure function value
         // as 0. For example, in above diagram we move to 0
         // from states 1 and 3.
-        if (g[0][ch] != 0)
-        {
+        if (g[0][ch] != 0) {
             f[g[0][ch]] = 0;
             q.push(g[0][ch]);
         }
     }
 
     // Now queue has states 1 and 3
-    while (q.size())
-    {
+    while (q.size()) {
         // Remove the front state from queue
         int state = q.front();
         q.pop();
-
         // For the removed state, find failure function for
         // all those characters for which goto function is
         // not defined.
-        for (int ch = 0; ch <= MAXC; ++ch)
-        {
+        for (int ch = 0; ch <= MAXC; ++ch) {
             // If goto function is defined for character 'ch'
             // and 'state'
-            if (g[state][ch] != -1)
-            {
+            if (g[state][ch] != -1) {
                 // Find failure state of removed state
                 int failure = f[state];
-
                 // Find the deepest node labeled by proper
                 // suffix of string from root to current
                 // state.
@@ -1128,16 +1092,13 @@ int buildMatchingMachine(string arr[], int k)
 
                 failure = g[failure][ch];
                 f[g[state][ch]] = failure;
-
                 // Merge output values
                 out[g[state][ch]] |= out[failure];
-
                 // Insert the next level node (of Trie) in Queue
                 q.push(g[state][ch]);
             }
         }
     }
-
     return states;
 }
 
@@ -1146,11 +1107,9 @@ int buildMatchingMachine(string arr[], int k)
 // currentState - The current state of the machine. Must be between
 //                0 and the number of states - 1, inclusive.
 // nextInput - The next character that enters into the machine.
-int findNextState(int currentState, char nextInput)
-{
+int findNextState(int currentState, char nextInput) {
     int answer = currentState;
     int ch = nextInput - 'a';
-
     // If goto is not defined, use failure function
     while (g[answer][ch] == -1)
         answer = f[answer];
@@ -1160,31 +1119,23 @@ int findNextState(int currentState, char nextInput)
 
 // This function finds all occurrences of all array words
 // in text.
-void searchWords(string arr[], int k, string text)
-{
+void searchWords(string arr[], int k, string text) {
     // Preprocess patterns.
     // Build machine with goto, failure and output functions
     buildMatchingMachine(arr, k);
-
     // Initialize current state
     int currentState = 0;
-
     // Traverse the text through the built machine to find
     // all occurrences of words in arr[]
-    for (int i = 0; i < text.size(); ++i)
-    {
+    for (int i = 0; i < text.size(); ++i) {
         currentState = findNextState(currentState, text[i]);
-
         // If match not found, move to next state
         if (out[currentState] == 0)
              continue;
-
         // Match found, print all matching words of arr[]
         // using output function.
-        for (int j = 0; j < k; ++j)
-        {
-            if (out[currentState] & (1 << j))
-            {
+        for (int j = 0; j < k; ++j) {
+            if (out[currentState] & (1 << j)) {
                 cout << "Word " << arr[j] << " appears from "
                      << i - arr[j].size() + 1 << " to " << i << endl;
             }
@@ -1193,30 +1144,22 @@ void searchWords(string arr[], int k, string text)
 }
 
 // Driver program to test above
-int main()
-{
+int main() {
     string arr[] = {"he", "she", "hers", "his"};
     string text = "ahishers";
     int k = sizeof(arr)/sizeof(arr[0]);
-
     searchWords(arr, k, text);
-
     return 0;
 }
 ```
 == Midpoint of a line
 ```cpp
 // function to find the midpoint of a line
-void midpoint(int x1, int x2,
-                int y1, int y2)
-{
-    cout << (float)(x1+x2)/2 << 
-            " , "<< (float)(y1+y2)/2 ; 
+void midpoint(int x1, int x2, int y1, int y2) {
+    cout << (float)(x1+x2)/2 << " , "<< (float)(y1+y2)/2 ; 
 }
-
 // Driver Function to test above
-int main()
-{
+int main() {
     int x1 =-1, y1 = 2  ;
     int x2 = 3, y2 = -6 ;    
     midpoint(x1, x2, y1, y2);    
@@ -1226,25 +1169,16 @@ int main()
 == Section formula (Point that divides a line in given ratio)
 ```cpp
 // Function to find the section of the line
-void section(double x1, double x2, double y1,
-              double y2, double m, double n)
-{
+void section(double x1, double x2, double y1, double y2, double m, double n) {
     // Applying section formula
-    double x = ((n * x1) + (m * x2)) /
-                            (m + n);
-    double y = ((n * y1) + (m * y2)) /
-                             (m + n);
-
+    double x = ((n * x1) + (m * x2)) / (m + n);
+    double y = ((n * y1) + (m * y2)) / (m + n);
     // Printing result
-    cout << "(" << x << ", ";
-    cout << y << ")" << endl;
+    cout << "(" << x << ", " << y << ")" << endl;
 }
-
 // Driver code
-int main()
-{
-    double x1 = 2, x2 = 4, y1 = 4,
-           y2 = 6, m = 2, n = 3;
+int main() {
+    double x1 = 2, x2 = 4, y1 = 4, y2 = 6, m = 2, n = 3;
     section(x1, x2, y1, y2, m, n);
     return 0;
 }
@@ -1252,16 +1186,13 @@ int main()
 == Slope of a line
 ```cpp
 // function to find the slope of a straight line
-float slope(float x1, float y1, float x2, float y2)
-{
+float slope(float x1, float y1, float x2, float y2) {
     if (x2 - x1 != 0)
         return (y2 - y1) / (x2 - x1);
     return INT_MAX;
 }
-
 // driver code to check the above function
-int main()
-{
+int main() {
     float x1 = 4, y1 = 2;
     float x2 = 2, y2 = 5;
     cout << "Slope is: " << slope(x1, y1, x2, y2);
@@ -1288,7 +1219,6 @@ bool onSegment(vector<int>& p, vector<int>& q, vector<int>& r) {
             q[1] <= max(p[1], r[1]) && 
             q[1] >= min(p[1], r[1]));
 }
-
 // function to find orientation of ordered triplet (p, q, r)
 // 0 --> p, q and r are collinear
 // 1 --> Clockwise
@@ -1296,43 +1226,33 @@ bool onSegment(vector<int>& p, vector<int>& q, vector<int>& r) {
 int orientation(vector<int>& p, vector<int>& q, vector<int>& r) {
     int val = (q[1] - p[1]) * (r[0] - q[0]) -
               (q[0] - p[0]) * (r[1] - q[1]);
-
     // collinear
     if (val == 0) return 0;
-
     // clock or counterclock wise
     // 1 for clockwise, 2 for counterclockwise
     return (val > 0) ? 1 : 2;
 }
-
-
 // function to check if two line segments intersect
 bool doIntersect(vector<vector<vector<int>>>& points) {
-
     // find the four orientations needed
     // for general and special cases
     int o1 = orientation(points[0][0], points[0][1], points[1][0]);
     int o2 = orientation(points[0][0], points[0][1], points[1][1]);
     int o3 = orientation(points[1][0], points[1][1], points[0][0]);
     int o4 = orientation(points[1][0], points[1][1], points[0][1]);
-
     // general case
     if (o1 != o2 && o3 != o4)
         return true;
-
     // special cases
     // p1, q1 and p2 are collinear and p2 lies on segment p1q1
     if (o1 == 0 && 
     onSegment(points[0][0], points[1][0], points[0][1])) return true;
-
     // p1, q1 and q2 are collinear and q2 lies on segment p1q1
     if (o2 == 0 && 
     onSegment(points[0][0], points[1][1], points[0][1])) return true;
-
     // p2, q2 and p1 are collinear and p1 lies on segment p2q2
     if (o3 == 0 && 
     onSegment(points[1][0], points[0][0], points[1][1])) return true;
-
     // p2, q2 and q1 are collinear and q1 lies on segment p2q2 
     if (o4 == 0 && 
     onSegment(points[1][0], points[0][1], points[1][1])) return true;
@@ -1357,27 +1277,21 @@ The idea to solve this problem is based on how to check if two given line segmen
 - Count the number of times the line intersects with polygon edges.
 - A point is inside the polygon if either count of intersections is odd or point lies on an edge of polygon.  If none of the conditions is true, then point lies outside.
 ```cpp
-
 struct Point {
     double x, y;
 };
-
 // Checking if a point is inside a polygon
-bool point_in_polygon(Point point, vector<Point> polygon)
-{
+bool point_in_polygon(Point point, vector<Point> polygon) {
     int num_vertices = polygon.size();
     double x = point.x, y = point.y;
     bool inside = false;
-
     // Store the first point in the polygon and initialize
     // the second point
     Point p1 = polygon[0], p2;
-
     // Loop through each edge in the polygon
     for (int i = 1; i <= num_vertices; i++) {
         // Get the next point in the polygon
         p2 = polygon[i % num_vertices];
-
         // Check if the point is above the minimum y
         // coordinate of the edge
         if (y > min(p1.y, p2.y)) {
@@ -1390,42 +1304,32 @@ bool point_in_polygon(Point point, vector<Point> polygon)
                     // Calculate the x-intersection of the
                     // line connecting the point to the edge
                     double x_intersection
-                        = (y - p1.y) * (p2.x - p1.x)
-                              / (p2.y - p1.y)
-                          + p1.x;
-
+                        = (y - p1.y) * (p2.x - p1.x) / (p2.y - p1.y) + p1.x;
                     // Check if the point is on the same
                     // line as the edge or to the left of
                     // the x-intersection
-                    if (p1.x == p2.x
-                        || x <= x_intersection) {
+                    if (p1.x == p2.x || x <= x_intersection) {
                         // Flip the inside flag
                         inside = !inside;
                     }
                 }
             }
         }
-
         // Store the current point as the first point for
         // the next iteration
         p1 = p2;
     }
-
     // Return the value of the inside flag
     return inside;
 }
-
 // Driver code
-int main()
-{
+int main() {
     // Define a point to test
     Point point = { 150, 85 };
-
     // Define a polygon
     vector<Point> polygon = {
         { 186, 14 }, { 186, 44 }, { 175, 115 }, { 175, 85 }
     };
-
     // Check if the point is inside the polygon
     if (point_in_polygon(point, polygon)) {
         cout << "Point is inside the polygon" << endl;
@@ -2665,6 +2569,269 @@ int main() {
             cout << "YES\n";
         }
     } 
+    return 0;
+}
+```
+== KMP
+```cpp
+// Aplicar KMP
+//
+// Depois de receber a string original, calcular a sua função Pi.
+// Sabendo o valor do prefixo/sufixo maior (é o valor na última posição de Pi),
+// criar uma string possível de ser a nossa resposta.
+// Já sabemos que obedece às condições de sufixo e prefixo (é isso que a função Pi faz).
+// Para descobrir se é infixo, correr KMP da string possível na string original.
+//
+// KMP foi aplicado quase directamente dos slides, com as modificações:
+// 1) Usar indexação 0,
+// 2) Em vez de imprimir que "foi encontrado padrão com shift etc.", queremos apenas
+// retornar verdadeiro se o padrão acontecer (obviamente) mas também se acontecer para além
+// de acontecer no início e no fim da string original.
+// 
+// Se não ocorrer, temos de verificar se a string possível contém ela própria sufixos/prefixos.
+// Por exemplo, a string qwertyqwertyqwerty tem como possível resposta qwertyqwerty. Mas qwertyqwerty não
+// cumpre as nossas 3 condições (prefixo, sufixo, infixo).
+// Mas qwerty cumpre. Por isso temos um ciclo que transforma a nossa string possível em strings cada vez
+// mais pequenas que têm prefixos que são sufixos.
+
+void print_pi(string p, vector<int> pi) {
+    for (auto c : p) {
+        cout << " " << c;
+    }
+    cout << "\n";
+    for (auto i : pi) {
+        cout << " " << i;
+    }
+    cout << "\n";
+}
+
+vector<int> compute_prefix(string p) {
+    int m = p.length();
+    vector<int> pi(m,0);
+    int k = 0;
+
+    for (int q = 1; q < m; q++) {
+        while (k > 0 && p[k] != p[q]) {
+            k = pi[k-1];
+        }
+        if (p[k] == p[q]) {
+            k++;
+        }
+        pi[q] = k;
+    }
+
+    return pi;
+}
+
+// procurar padrão p na string t
+bool kmp(string t, string p) {
+    int n = t.length();
+    int m = p.length();
+    // se o sufixo for vazio, não ocorre
+    if (m == 0) return false;
+    vector<int> pi = compute_prefix(p);
+    int q = 0;
+
+    for (int i = 0; i < n; i++) {
+        while (q > 0 && p[q] != t[i]) {
+            q = pi[q-1];
+        }
+        if (p[q] == t[i]) {
+            q = q + 1;
+        }
+        if (q == m) {
+            int start_pos = i - m + 1;
+            // cout << "found " << p << " in " << t << " with shift " << start_pos << "\n";
+            //se o padrão for todo igual e não estiver no início nem no fim
+            if (start_pos > 0 && start_pos < n - m) return true;
+            q = pi[q-1];
+        }
+    }
+    return false;
+}
+
+int main() {
+    string original;
+    cin >> original;
+
+    string possible = original;
+    // calcular respostas possíveis, começando pela maior e ir diminuindo
+    do {
+        vector<int> pi = compute_prefix(possible);
+        int l = possible.length();
+        possible = possible.substr(l-pi[l-1], pi[l-1]);
+        
+        if (kmp(original, possible)) {
+            cout << possible << "\n";
+            return 0;
+        }
+    } while (possible.length() > 0);
+
+    cout << "Just a legend\n";
+    return 0;
+}
+```
+== Trie
+```cpp
+// Implementação de Trie retirada de https://www.geeksforgeeks.org/dsa/trie-delete/
+// (acabei por não usar a função remove(), mas a estrutura veio de lá)
+// Modificada para receber letras maiúsculas e guardar pontuação nos nós que são fins de strings.
+//
+// Receber o tabuleiro 4 x 4, guardar em board[][].
+// Receber as palavras a procurar, e guardar numa Trie.
+// Fazer um DFS em todas as casas do tabuleiro.
+// No DFS, vamos acompanhar a 'descida' no board com uma 'descida' da Trie.
+// Se nalgum ponto não conseguirmos acompanhar a Trie, sair do DFS.
+// Por exemplo, no tabuleiro:
+// FNEI
+// OBCN
+// EERI
+// VSIR
+// A palavra BEER começa na posição (1,1), e a Trie é root->B->E->E->R(isEndOfWord)
+// O DFS a partir de (1,1) encontra a letra B, que também é encontrada a partir da raíz da Trie.
+// Logo, podemos continuar a procurar, e agora tentamos encontrar um E (a próxima da letra da Trie).
+// Ao visitar o vizinho da esquerda, verifica-se que O não pertence aos filhos de B na Trie,
+// por isso podemos acabar o DFS aí.
+// 
+const int ALPHABET_SIZE = 26;
+
+int calc_score(int n) {
+    switch (n) {
+        case 3: return 1;
+        case 4: return 1;
+        case 5: return 2;
+        case 6: return 3;
+        case 7: return 5;
+        default: return 11;
+    }
+}
+
+struct TrieNode {
+    TrieNode* children[ALPHABET_SIZE];
+    bool isEndOfWord;
+    int word_score;
+    
+    TrieNode() {
+        isEndOfWord = false;
+        word_score = 0;
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            children[i] = nullptr;
+        }
+    }
+};
+
+TrieNode* getNode() {
+    return new TrieNode();
+}
+
+void insert(TrieNode* root, const string& key) {
+    TrieNode* pCrawl = root;
+
+    for (int i = 0; i < (int)key.length(); i++) {
+        int index = key[i] - 'A';
+        if (!pCrawl->children[index])
+            pCrawl->children[index] = getNode();
+
+        pCrawl = pCrawl->children[index];
+    }
+
+    pCrawl->isEndOfWord = true;
+    pCrawl->word_score = calc_score(key.length());
+}
+
+bool isEmpty(TrieNode* root) {
+    for (int i = 0; i < ALPHABET_SIZE; i++)
+        if (root->children[i])
+            return false;
+    return true;
+}
+
+vector<vector<char>> board(4, vector<char>(4));
+vector<vector<bool>> visited(4, vector<bool>(4, false));
+vector<pair<int,int>> neighbours = {
+    {-1,-1},    //NW
+    {-1, 0},    //N
+    {-1, 1},    //NE
+    { 0, 1},    //E
+    { 1, 1},    //SE
+    { 1, 0},    //S
+    { 1,-1},    //SW
+    { 0,-1}     //W
+};
+
+// dfs com backtracking
+void dfs(int i, int j, TrieNode* curr, string& s, TrieNode* root, int& total_score) {
+    // se estivermos fora dos limites ou já tiver sido visitado, fazer nada
+    if (i < 0 || i >= 4 || j < 0 || j >= 4 || visited[i][j]) return;
+    
+    char c = board[i][j];
+    int idx = c - 'A';
+    // se a letra não estiver no caminho da trie, a palavra não existe, fazer nada
+    if (curr->children[idx] == NULL) return;
+    
+    visited[i][j] = true;
+    curr = curr->children[idx];
+    s.push_back(c);
+    // se encontramos uma palavra, pontuar e retirar essa palavra da trie (só pode aparecer uma vez)
+    if (curr->isEndOfWord) {
+        total_score += curr->word_score;
+        curr->isEndOfWord = false;
+    }
+    // continuar o dfs nos vizinhos
+    for (auto &n : neighbours) {
+        int x = i + n.first;
+        int y = j + n.second;
+        if (x >= 0 && x < 4 && y >= 0 && y < 4) {
+            dfs(x, y, curr, s, root, total_score);
+        }
+    }    
+    // backtrack
+    visited[i][j] = false;
+    s.pop_back();
+}
+
+int main() {
+    int n_cases;
+    cin >> n_cases;
+
+    for (int game = 1; game <= n_cases; game++) {
+
+        // preencher board
+        for (int i = 0; i < 4; i++) {
+            string line;
+            cin >> line;
+            for (int j = 0; j < 4; j++) {
+                board[i][j] = line[j];
+            }
+        }
+
+        int n_words;
+        cin >> n_words;
+
+        // criar uma trie com as palavras
+        TrieNode* root = new TrieNode();
+        
+        for (int i = 0; i < n_words; i++) {
+            string word;
+            cin >> word;
+            insert(root, word);
+        }
+        
+        int total_score = 0;
+        string current_word;        
+        // dfs no board inteiro
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                // reset de visited
+                for (auto &row : visited) {
+                    fill(row.begin(), row.end(), false);
+                }
+                current_word.clear();
+                dfs(i, j, root, current_word, root, total_score);
+            }
+        }        
+        cout << "Score for Boggle game #" << game << ": " << total_score << "\n";
+    }
     return 0;
 }
 ```
