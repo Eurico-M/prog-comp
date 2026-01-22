@@ -76,11 +76,6 @@ print r
 ```
 == Segment tree
 ```cpp
-// Pedro Ribeiro (DCC/FCUP)
-#include <bits/stdc++.h>
-using namespace std;
-
-// An example simple segment tree implementation with arrays
 const int MAX = 200005;   // Capacity of Segment Tree
 const int MAX_ST = MAX*4;
 
@@ -323,16 +318,6 @@ bfs(node v):
 ```
 == Edmonds-Karp (Fluxo máximo)
 ```cpp
-// Exemplo de implementacao de algoritmo de Edmonds-Karp para grafos pesados e dirigidos
-// usando lista de adjacencias + matriz de capacidades (implementacao com vector)
-
-#include <iostream>
-#include <climits>
-#include <vector>
-#include <queue>
-
-using namespace std;
-
 // Classe que representa um grafo
 class Graph {
 public:
@@ -435,16 +420,6 @@ int main() {
 ```
 == Dijkstra
 ```cpp
-// Exemplo de aplicacao do algoritmo de Dijkstra
-// (assumindo um grafo pesado e dirigido, sem pesos negativos)
-
-#include <iostream>
-#include <climits>
-#include <list>
-#include <set>
-
-using namespace std;
-
 // Classe que representa um no
 class Node {
 public:
@@ -894,10 +869,6 @@ vector<int> prefix_function(string s) {
 ```
 == Trie
 ```cpp
-// C++ implementation of delete operations on Trie
-#include <bits/stdc++.h>
-using namespace std;
-
 const int ALPHABET_SIZE = 26;
 
 // trie node
@@ -1042,11 +1013,6 @@ For a state s, indexes of all words ending at s are stored. These indexes are st
 
 #underline[Matching]: Traverse the given text over built automaton to find all matching words.
 ```cpp
-// C++ program for implementation of Aho Corasick algorithm
-// for string matching
-using namespace std;
-#include <bits/stdc++.h>
-
 // Max number of states in the matching machine.
 // Should be equal to the sum of the length of all keywords.
 const int MAXS = 500;
@@ -1235,6 +1201,1470 @@ int main()
 
     searchWords(arr, k, text);
 
+    return 0;
+}
+```
+== Midpoint of a line
+```cpp
+// function to find the midpoint of a line
+void midpoint(int x1, int x2,
+                int y1, int y2)
+{
+    cout << (float)(x1+x2)/2 << 
+            " , "<< (float)(y1+y2)/2 ; 
+}
+
+// Driver Function to test above
+int main()
+{
+    int x1 =-1, y1 = 2  ;
+    int x2 = 3, y2 = -6 ;    
+    midpoint(x1, x2, y1, y2);    
+    return 0;
+}
+```
+== Section formula (Point that divides a line in given ratio)
+```cpp
+// Function to find the section of the line
+void section(double x1, double x2, double y1,
+              double y2, double m, double n)
+{
+    // Applying section formula
+    double x = ((n * x1) + (m * x2)) /
+                            (m + n);
+    double y = ((n * y1) + (m * y2)) /
+                             (m + n);
+
+    // Printing result
+    cout << "(" << x << ", ";
+    cout << y << ")" << endl;
+}
+
+// Driver code
+int main()
+{
+    double x1 = 2, x2 = 4, y1 = 4,
+           y2 = 6, m = 2, n = 3;
+    section(x1, x2, y1, y2, m, n);
+    return 0;
+}
+```
+== Slope of a line
+```cpp
+// function to find the slope of a straight line
+float slope(float x1, float y1, float x2, float y2)
+{
+    if (x2 - x1 != 0)
+        return (y2 - y1) / (x2 - x1);
+    return INT_MAX;
+}
+
+// driver code to check the above function
+int main()
+{
+    float x1 = 4, y1 = 2;
+    float x2 = 2, y2 = 5;
+    cout << "Slope is: " << slope(x1, y1, x2, y2);
+    return 0;
+}
+```
+== Line Intersection
+The idea is to use orientation of lines to determine whether they intersect or not. 
+Two line segments [p1, q1] and [p2, q2] intersect if and only if one of the following two conditions is verified:
+
+1. General Case:
+    - [p1, q1, p2] and [p1, q1, q2] have different orientations.
+    - [p2, q2, p1] and [p2, q2, q1] have different orientations. 
+
+2. Special Case: 
+    - [p1, q1, p2], [p1, q1, q2], [p2, q2, p1], and [p2, q2, q1] are all collinear.
+    - The x-projections of [p1, q1] and [p2, q2] intersect.
+    - The y-projections of [p1, q1] and [p2, q2] intersect.
+```cpp
+// function to check if point q lies on line segment 'pr'
+bool onSegment(vector<int>& p, vector<int>& q, vector<int>& r) {
+    return (q[0] <= max(p[0], r[0]) && 
+            q[0] >= min(p[0], r[0]) &&
+            q[1] <= max(p[1], r[1]) && 
+            q[1] >= min(p[1], r[1]));
+}
+
+// function to find orientation of ordered triplet (p, q, r)
+// 0 --> p, q and r are collinear
+// 1 --> Clockwise
+// 2 --> Counterclockwise
+int orientation(vector<int>& p, vector<int>& q, vector<int>& r) {
+    int val = (q[1] - p[1]) * (r[0] - q[0]) -
+              (q[0] - p[0]) * (r[1] - q[1]);
+
+    // collinear
+    if (val == 0) return 0;
+
+    // clock or counterclock wise
+    // 1 for clockwise, 2 for counterclockwise
+    return (val > 0) ? 1 : 2;
+}
+
+
+// function to check if two line segments intersect
+bool doIntersect(vector<vector<vector<int>>>& points) {
+
+    // find the four orientations needed
+    // for general and special cases
+    int o1 = orientation(points[0][0], points[0][1], points[1][0]);
+    int o2 = orientation(points[0][0], points[0][1], points[1][1]);
+    int o3 = orientation(points[1][0], points[1][1], points[0][0]);
+    int o4 = orientation(points[1][0], points[1][1], points[0][1]);
+
+    // general case
+    if (o1 != o2 && o3 != o4)
+        return true;
+
+    // special cases
+    // p1, q1 and p2 are collinear and p2 lies on segment p1q1
+    if (o1 == 0 && 
+    onSegment(points[0][0], points[1][0], points[0][1])) return true;
+
+    // p1, q1 and q2 are collinear and q2 lies on segment p1q1
+    if (o2 == 0 && 
+    onSegment(points[0][0], points[1][1], points[0][1])) return true;
+
+    // p2, q2 and p1 are collinear and p1 lies on segment p2q2
+    if (o3 == 0 && 
+    onSegment(points[1][0], points[0][0], points[1][1])) return true;
+
+    // p2, q2 and q1 are collinear and q1 lies on segment p2q2 
+    if (o4 == 0 && 
+    onSegment(points[1][0], points[0][1], points[1][1])) return true;
+
+    return false;
+}
+
+int main() {
+    vector<vector<vector<int>>> points = 
+    {{{1, 1}, {10, 1}}, {{1, 2}, {10, 2}}};
+
+    if(doIntersect(points))
+        cout << "Yes";
+    else cout << "No";
+
+    return 0;
+}
+```
+== Point inside or outside a polygon
+The idea to solve this problem is based on how to check if two given line segments intersect:
+- Draw a horizontal line to the right of each point and extend it to infinity
+- Count the number of times the line intersects with polygon edges.
+- A point is inside the polygon if either count of intersections is odd or point lies on an edge of polygon.  If none of the conditions is true, then point lies outside.
+```cpp
+
+struct Point {
+    double x, y;
+};
+
+// Checking if a point is inside a polygon
+bool point_in_polygon(Point point, vector<Point> polygon)
+{
+    int num_vertices = polygon.size();
+    double x = point.x, y = point.y;
+    bool inside = false;
+
+    // Store the first point in the polygon and initialize
+    // the second point
+    Point p1 = polygon[0], p2;
+
+    // Loop through each edge in the polygon
+    for (int i = 1; i <= num_vertices; i++) {
+        // Get the next point in the polygon
+        p2 = polygon[i % num_vertices];
+
+        // Check if the point is above the minimum y
+        // coordinate of the edge
+        if (y > min(p1.y, p2.y)) {
+            // Check if the point is below the maximum y
+            // coordinate of the edge
+            if (y <= max(p1.y, p2.y)) {
+                // Check if the point is to the left of the
+                // maximum x coordinate of the edge
+                if (x <= max(p1.x, p2.x)) {
+                    // Calculate the x-intersection of the
+                    // line connecting the point to the edge
+                    double x_intersection
+                        = (y - p1.y) * (p2.x - p1.x)
+                              / (p2.y - p1.y)
+                          + p1.x;
+
+                    // Check if the point is on the same
+                    // line as the edge or to the left of
+                    // the x-intersection
+                    if (p1.x == p2.x
+                        || x <= x_intersection) {
+                        // Flip the inside flag
+                        inside = !inside;
+                    }
+                }
+            }
+        }
+
+        // Store the current point as the first point for
+        // the next iteration
+        p1 = p2;
+    }
+
+    // Return the value of the inside flag
+    return inside;
+}
+
+// Driver code
+int main()
+{
+    // Define a point to test
+    Point point = { 150, 85 };
+
+    // Define a polygon
+    vector<Point> polygon = {
+        { 186, 14 }, { 186, 44 }, { 175, 115 }, { 175, 85 }
+    };
+
+    // Check if the point is inside the polygon
+    if (point_in_polygon(point, polygon)) {
+        cout << "Point is inside the polygon" << endl;
+    }
+    else {
+        cout << "Point is outside the polygon" << endl;
+    }
+    return 0;
+}
+```
+= Exemplos de código
+== Pesquisa binária
+```cpp
+// Criar um vector com as máquinas e inserir as máquinas, computando a máquina que demora
+// mais tempo.
+// Declarar o limite inferior (1 segundo) e superior (máquina que demora mais tempo a produzir
+// todos os produtos).
+// Fazer pesquisa binária nesse espaço de possibilidades: O(log n).
+// A verificação da condição is_possible decide se é possível, num determinado tempo, fazer
+// o número de produtos pretendido: O(n)
+
+bool is_possible(vector<unsigned long long> machines, unsigned long long target_products, unsigned long long time) {
+    unsigned long long products_made = 0;
+    for (unsigned long long m : machines) {
+        products_made += time / m;
+    }
+
+    return products_made >= target_products;
+}
+
+unsigned long long my_binary_search(vector<unsigned long long> machines, unsigned long long lower, unsigned long long upper, unsigned long long target_products) {
+    while (lower < upper) {
+        unsigned long long middle = lower + (upper - lower) / 2;
+        if (is_possible(machines, target_products, middle)) {
+            upper = middle;
+        } else {
+            lower = middle + 1;
+        }
+    }
+
+    if (!is_possible(machines, target_products, lower)) {
+        return -1;
+    }
+    return lower;
+}
+
+int main() {
+    unsigned long long n, t;
+    cin >> n >> t;
+
+    unsigned long long highest_value = 0;
+    vector<unsigned long long> machines;
+
+    for (unsigned long long i = 0; i < n; i++) {
+
+        unsigned long long machine;
+        cin >> machine;
+
+        machines.push_back(machine);
+
+        if (machine > highest_value) {
+            highest_value = machine;
+        }
+    }
+
+    unsigned long long lower_bound = 1;
+    unsigned long long upper_bound = t * highest_value;
+
+    unsigned long long minimum_time = my_binary_search(machines, lower_bound, upper_bound, t);
+
+    cout << minimum_time << "\n";
+    return 0;
+}
+```
+```cpp
+// Muito semelhante ao PC012, usar pesquisa binária no espaço de possibilidades.
+//
+// Duas diferenças: valores contínuos e o problema agora é de maximização (em vez de minimização).
+// Para os valores contínuos, modificar o critério de paragem para ser um intervalo maior
+// ou igual que a precisão pretendida.
+// Para a maximização, o espaço de possibilidades é do tipo:
+// [yes, yes,..., yes, no, no, ..., no]
+// por isso, quando o middle verifica a condição, fazemos low = middle, e quando não verifica
+// fazemos high = middle (o oposto da minimização do problema PC012).
+//
+// Para a condição booleana is_possible, usar novamente um algoritmo greedy que tenta
+// dividir o volume de uma tarte pelo volume hipotético para obter o número de pessoas que
+// pode alimentar.
+
+bool is_possible(vector<int> pies, int people, double volume) {
+    int max_people = 0;
+    for (auto p : pies) {
+        max_people += int(floor((M_PI * p * p)/volume));
+    }
+
+    return max_people >= people;
+}
+
+
+double my_binary_search(vector<int> pies, double low, double high, int people) {
+    while (high-low >= 0.0001) {
+        double middle = low + (high - low) / 2;
+
+        if (is_possible(pies, people, middle)) {
+            low = middle;
+        } else {
+            high = middle;
+        }
+    }
+    return low;
+}
+
+int main() {
+
+    int test_cases;
+    cin >> test_cases;
+
+    for (int i = 0; i < test_cases; i++) {
+        int nr_pies, friends;
+        cin >> nr_pies >> friends;
+
+        int people = friends + 1;
+
+        vector<int> pies;
+        int biggest_pie = 0;
+        for (int j = 0; j < nr_pies; j++) {
+            int p;
+            cin >> p;
+            pies.push_back(p);
+            if (p > biggest_pie) {
+                biggest_pie = p;
+            }
+        }
+
+        double upper_bound = M_PI * biggest_pie * biggest_pie;
+        double lower_bound = 0;
+
+        double volume = my_binary_search(pies, lower_bound, upper_bound, people);
+
+        cout << fixed;
+        cout << setprecision(4);
+        cout << volume << "\n";
+    }
+    return 0;
+}
+```
+== Pesquisa Ternária
+```cpp
+// Pesquisa ternária no espaço de possibilidades k (altura final dos edifícios).
+//
+// Função cost(k) calcula o custo de ter todos os edifícios à altura k: O(n).
+// Fazer uma pesquisa ternária para o k mínimo: O(log3 n).
+// A pesquisa ternária tem de ter um critério de paragem ligeiramente diferente porque,
+// como o espaço de pesquisa é discreto, a divisão ternária não pode ser aplicada a espaços
+// menores que 3.
+// Assim, quando reduzimos o espaço de possibilidades a 3 inteiros, fazemos uma pesquisa
+// linear nesses 3 inteiros.
+
+typedef struct {
+    long height;
+    long cost;
+} Building;
+
+long cost(vector<Building> buildings, long k) {
+    long cost = 0;
+    for (auto x : buildings) {
+        cost += abs(x.height - k) * x.cost;
+    }
+    return cost;
+}
+
+long my_ternary_search(vector<Building> buildings, long lower, long upper) {
+    while (upper - lower > 3) {
+
+        long m1 = lower + (upper - lower) / 3;
+        long m2 = upper - (upper - lower) / 3;
+
+        long cost1 = cost(buildings, m1);
+        long cost2 = cost(buildings, m2);
+
+        if (cost1 < cost2) {
+            upper = m2;
+        } else if (cost1 > cost2) {
+            lower = m1;
+        } else {
+            lower = m1;
+            upper = m2;
+        }
+    }
+
+    long min_cost = cost(buildings, lower);
+    long k = lower;
+
+    for (long i = lower; i <= upper; i++) {
+        long c = cost(buildings, i);
+        if (c < min_cost) {
+            min_cost = c;
+            k = i;
+        }
+    }
+
+    return k;
+}
+
+int main() {
+    long nr_tests;
+    cin >> nr_tests;
+
+    for (long i = 0; i < nr_tests; i++) {
+        long nr_buildings;
+        cin >> nr_buildings;
+
+        vector<Building> buildings;
+        long highest_building = 0;
+
+        for (long j = 0; j < nr_buildings; j++) {
+            long height_in;
+            cin >> height_in;
+
+            Building b;
+            b.height = height_in;
+            b.cost = 0;
+            buildings.push_back(b);
+
+            if (height_in > highest_building) {
+                highest_building = height_in;
+            }
+        }
+
+        for (long j = 0; j < nr_buildings; j++) {
+            long cost_in;
+            cin >> cost_in;
+            buildings[j].cost = cost_in;
+        }
+
+        long lower = 1;
+        long upper = highest_building;
+
+        long k = my_ternary_search(buildings, lower, upper);
+        cout << cost(buildings, k) << "\n";
+    }
+
+    return 0;
+}
+```
+== Segment Tree
+```cpp
+// Temos de modificar a segtree para guardar pares: o valor e a frequência desse valor.
+// Quando construímos a árvore, as frequências são 1 para todos os números.
+// No merge, escolhemos o maior dos números para passar para o nó pai.
+// Mas se os números forem iguais, então somamos a frequência.
+
+const int MAX = 200005; // Capacity of Segment Tree
+const int MAX_ST = MAX * 4;
+
+const pair<int, int> NEUTRAL = {0, 0}; // Neutral element
+
+typedef pair<int, int> st_value; // type of segment tree value
+
+int n;               // Number of elements in the segtree
+st_value v[MAX];     // Array of values
+st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
+
+// Merge contents of nodes a and b
+st_value merge(st_value a, st_value b) {
+  if (a.first > b.first) {
+    return a;
+  }
+  if (b.first > a.first) {
+    return b;
+  }
+  return make_pair(a.first, a.second + b.second);
+}
+
+// Build initial segtree (in position pos, interval [start,end])
+void build(int pos, int start, int end) {
+  if (start == end) {
+    st[pos] = v[start];
+  } else {
+    int middle = start + (end - start) / 2;
+    build(pos * 2, start, middle);
+    build(pos * 2 + 1, middle + 1, end);
+    st[pos] = merge(st[pos * 2], st[pos * 2 + 1]);
+  }
+}
+
+// Update node n to value v
+void update(int pos, int start, int end, int n, st_value v) {
+  if (start > n || end < n)
+    return;
+  if (start == end) {
+    st[pos] = v;
+  } else {
+    int middle = start + (end - start) / 2;
+    update(pos * 2, start, middle, n, v);
+    update(pos * 2 + 1, middle + 1, end, n, v);
+    st[pos] = merge(st[pos * 2], st[pos * 2 + 1]);
+  }
+}
+
+// Make a query of interval [a,b]
+st_value query(int pos, int start, int end, int a, int b) {
+  if (start > b || end < a)
+    return NEUTRAL;
+  if (start >= a && end <= b)
+    return st[pos];
+
+  int middle = start + (end - start) / 2;
+  st_value l = query(pos * 2, start, middle, a, b);
+  st_value r = query(pos * 2 + 1, middle + 1, end, a, b);
+  return merge(l, r);
+}
+
+int main() {
+  int q;
+  cin >> n >> q;
+  for (int i = 1; i <= n; i++) {
+    int w;
+    cin >> w;
+    v[i] = make_pair(w, 1);
+  }
+
+  build(1, 1, n);
+
+  for (int i = 1; i <= q; i++) {
+    int a, b;
+    cin >> a >> b;
+    pair<int, int> answer = query(1, 1, n, a, b);
+    cout << answer.first << " " << answer.second << "\n";
+  }
+
+  return 0;
+}
+```
+```cpp
+// Guardar maps na segtree. Os pares do mapa representam o valor e a frequência desse valor.
+// Em cada nó da tree, o map tem no máximo 3 valores: o mais frequente,
+// o valor mais à esquerda, e o valor mais à direita (do intervalo correspondente).
+//
+// Assim, para fazer um merge, é preciso:
+// verificar se os dois valores mais "interiores" são iguais. se forem, somar as frequências.
+// Calcular o valor mais frequente.
+// Colocar no novo map: o mais frequente, e os dois valores dos "extremos".
+//
+// Isto porque os "extremos" podem somar-se com os extremos de outros ramos da árvore.
+//
+// Como o elemento neutro é um map vazio, verificar maps vazios antes de aceder aos iteradores.
+
+const int MAX = 200005; // Capacity of Segment Tree
+const int MAX_ST = MAX * 4;
+
+const map<int,int> NEUTRAL = {}; // Neutral element
+
+typedef map<int,int> st_value; // type of segment tree value
+
+int n;               // Number of elements in the segtree
+st_value v[MAX];     // Array of values
+st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
+
+// Merge contents of nodes a and b
+st_value merge(st_value a, st_value b) {
+    map<int,int> return_map;
+
+    int most_frequent = 0;
+    int frequency = 0;
+
+    // calcular se o último elemento do map da direita é
+    // igual ao primeiro elemento do map da esquerda
+    if (!a.empty() && !b.empty()) {
+        auto last_a = a.end();
+        last_a--;
+        auto first_b = b.begin();
+
+        // se forem iguais, somar as frequencias e assumir como "mais frequente" para já
+        if (last_a->first == first_b->first) {
+            most_frequent = last_a->first;
+            frequency = last_a->second + first_b->second;
+        }
+    }
+
+    // verificar o valor mais frequente nos dois maps
+    for (auto x : a) {
+        if (x.second > frequency) {
+            frequency = x.second;
+            most_frequent = x.first;
+        }
+    }
+
+    for (auto x : b) {
+        if (x.second > frequency) {
+            frequency = x.second;
+            most_frequent = x.first;
+        }
+    }
+
+    // preencher novo return_map com: o mais frequente,
+    // o mais à esquerda do mapa esquerdo, e o mais à direita do mapa direito
+    if (frequency > 0) {
+        return_map.insert({most_frequent, frequency});
+    }
+
+    if (!a.empty()) {
+        auto first_a = a.begin();
+        return_map.insert(*first_a);
+    }
+    if (!b.empty()) {
+        auto last_b = b.end();
+        last_b--;
+        return_map.insert(*last_b);
+    }
+
+    return return_map;
+}
+
+// Build initial segtree (in position pos, interval [start,end])
+void build(int pos, int start, int end) {
+  if (start == end) {
+    st[pos] = v[start];
+  } else {
+    int middle = start + (end - start) / 2;
+    build(pos * 2, start, middle);
+    build(pos * 2 + 1, middle + 1, end);
+    st[pos] = merge(st[pos * 2], st[pos * 2 + 1]);
+  }
+}
+
+// Update node n to value v
+void update(int pos, int start, int end, int n, st_value v) {
+  if (start > n || end < n)
+    return;
+
+  if (start == end) {
+    st[pos] = v;
+
+  } else {
+    int middle = start + (end - start) / 2;
+    update(pos * 2, start, middle, n, v);
+    update(pos * 2 + 1, middle + 1, end, n, v);
+    st[pos] = merge(st[pos * 2], st[pos * 2 + 1]);
+  }
+}
+
+// Make a query of interval [a,b]
+st_value query(int pos, int start, int end, int a, int b) {
+  if (start > b || end < a)
+    return NEUTRAL;
+  if (start >= a && end <= b)
+    return st[pos];
+
+  int middle = start + (end - start) / 2;
+  st_value l = query(pos * 2, start, middle, a, b);
+  st_value r = query(pos * 2 + 1, middle + 1, end, a, b);
+  return merge(l, r);
+}
+
+int main() {
+  int q;
+  cin >> n >> q;
+  for (int i = 1; i <= n; i++) {
+    int w;
+    cin >> w;
+
+    map<int,int> m;
+    m.insert({w,1});
+    v[i] = m;
+  }
+
+  build(1, 1, n);
+
+  for (int i = 1; i <= q; i++) {
+    int a, b;
+    cin >> a >> b;
+
+    map<int,int> q_answer = query(1, 1, n, a, b);
+
+    int frequency = 0;
+    for (auto x : q_answer) {
+        if (x.second > frequency) {
+            frequency = x.second;
+        }
+    }
+
+    cout << frequency << "\n";
+  }
+  return 0;
+}
+```
+```cpp
+// Usar uma segtree para guardar o máximo.
+//
+// Fazer uma pesquisa binária na segtree para encontrar o valor mais à esquerda por defeito
+// que for maior ou igual que o número de turistas que procura quarto.
+//
+// Fazer um update da segtree na posição encontrada na pesquisa anterior, com o valor da
+// diferença entre o número de turistas e o número de quartos livres.
+
+const int MAX = 200005;   // Capacity of Segment Tree
+const int MAX_ST = MAX*4;
+
+const int NEUTRAL = 0;    // Neutral element
+
+typedef int64_t st_value; // type of segment tree value
+
+int n;               // Number of elements in the segtree
+st_value v[MAX];     // Array of values
+st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
+
+// Merge contents of nodes a and b
+st_value merge(st_value a, st_value b) {
+    return max(a,b);
+}
+
+// Build initial segtree (in position pos, interval [start,end])
+void build(int pos, int start, int end) {
+    if (start == end) {
+        st[pos] = v[start];
+    } else {
+        int middle = start + (end-start)/2;
+        build(pos*2, start, middle);
+        build(pos*2+1, middle+1, end);
+        st[pos] = merge(st[pos*2], st[pos*2+1]);
+    }
+}
+
+// Update node n to value v
+void update(int pos, int start, int end, int n, st_value v) {
+    if (start > n || end < n) return;
+    if (start == end) {
+        st[pos] = v;
+    } else {
+        int middle = start + (end-start)/2;
+        update(pos*2, start, middle, n, v);
+        update(pos*2+1, middle+1, end, n, v);
+        st[pos] = merge(st[pos*2], st[pos*2+1]);
+    }
+}
+
+// Make a query of interval [a,b]
+st_value query(int pos, int start, int end, int a, int b) {
+    if (start>b || end<a) return NEUTRAL;
+    if (start>=a && end<=b) return st[pos];
+
+    int middle = start + (end-start)/2;
+    st_value l = query(pos*2, start, middle, a, b);
+    st_value r = query(pos*2+1, middle+1, end, a, b);
+    return merge(l, r);
+}
+
+// ---------------------------------------------------------
+
+int main() {
+    int q;
+    cin >> n >> q;
+    for (int i=1; i<=n; i++) {
+        int h;
+        cin >> h;
+        v[i] = h;
+    }
+
+    build(1, 1, n);
+
+    for (int i = 0; i < q; i++) {
+        int tourists;
+        cin >> tourists;
+
+        if (st[1] < tourists) {
+            cout << 0;
+
+        } else {
+            // binary search na segment tree
+            int cur = 1;
+            int start = 1;
+            int end = n;
+            while (start != end) {
+                int middle = start + (end-start)/2;
+
+                if (st[2 * cur] >= tourists) {
+                    cur = 2 * cur;
+                    end = middle;
+
+                } else {
+                    cur = 2 * cur + 1;
+                    start = middle + 1;
+                }
+            }
+            cout << start;
+            update(1, 1, n, start, st[cur] - tourists);
+        }
+
+        if (i < q - 1) {
+            cout << " ";
+        }
+    }
+    cout << "\n";
+    return 0;
+}
+```
+```cpp
+// Receber a sequência de números e guardar para usar mais tarde:
+// sequence = [0,5,1,2,3,4,5]
+//
+// Receber primeiro as queries, para poder criar uma única segtree que responde a todos os queries:
+// queries = [(2,4,1),(4,4,4),(1,6,2)]
+//
+// Põr todos os K das queries num set, para remover repetidos e ordenar:
+// query_set = [1,2,4]
+//
+// Criar um dicionário auxiliar para ser mais fácil aceder a indexes:
+// query_dictionary = [{1:0},{2:1},{4:2}]
+//
+// Criar o array auxiliar v[] para usar o build() da segtree. Cada elemento da segtree é um
+// vector que nos diz, a cada posição, se os elementos desse range são maiores do que um K, para
+// K valores do vector.
+// Por exemplo, o primeiro elemento da sequência (5) é maior que 1, 2, e 4, logo:
+// v[1] = [1,1,1]
+// O quarto elemento da sequência (3) é só maior que 1 e 2, logo:
+// v[4] = [1,1,0]
+//
+// O merge() da segtree é simplesmente somar os vectores elemento a elemento, tendo em atenção
+// vectores vazios (NEUTRAL são vectores vazios).
+//
+// A resposta a um query da árvore é, portanto, um vector, que representa o número de vezes que,
+// nesse range, os elementos da sequẽncia são maiores que os K todos.
+// Depois é só usar o query_dictionary para descobrir o índice desse vector que corresponde ao
+// query k que queremos responder.
+
+const int MAX = 200005;   // Capacity of Segment Tree
+const int MAX_ST = MAX*4;
+
+const vector<int> NEUTRAL = {};    // Neutral element
+
+typedef vector<int> st_value; // type of segment tree value
+
+int n;               // Number of elements in the segtree
+st_value v[MAX];     // Array of values
+st_value st[MAX_ST]; // Segtree (in this case storing interval sums)
+
+// Merge contents of nodes a and b
+st_value merge(st_value a, st_value b) {
+    // verificar vectores vazios, usar tamanho maior
+    int size_a = a.size();
+    int size_b = b.size();
+    int size = max(size_a, size_b);
+
+    vector<int> merge_result;
+
+    for (int i = 0; i < size; i++) {
+        if (a.empty()){
+            merge_result.push_back(b[i]);
+        } else if (b.empty()) {
+            merge_result.push_back(a[i]);
+        } else {
+            merge_result.push_back(a[i]+b[i]);
+        }
+    }
+
+    return merge_result;
+}
+
+// Build initial segtree (in position pos, interval [start,end])
+void build(int pos, int start, int end) {
+    if (start == end) {
+        st[pos] = v[start];
+    } else {
+        int middle = start + (end-start)/2;
+        build(pos*2, start, middle);
+        build(pos*2+1, middle+1, end);
+        st[pos] = merge(st[pos*2], st[pos*2+1]);
+    }
+}
+
+// Update node n to value v
+void update(int pos, int start, int end, int n, st_value v) {
+    if (start > n || end < n) return;
+    if (start == end) {
+        st[pos] = v;
+    } else {
+        int middle = start + (end-start)/2;
+        update(pos*2, start, middle, n, v);
+        update(pos*2+1, middle+1, end, n, v);
+        st[pos] = merge(st[pos*2], st[pos*2+1]);
+    }
+}
+
+// Make a query of interval [a,b]
+st_value query(int pos, int start, int end, int a, int b) {
+    if (start>b || end<a) return NEUTRAL;
+    if (start>=a && end<=b) return st[pos];
+
+    int middle = start + (end-start)/2;
+    st_value l = query(pos*2, start, middle, a, b);
+    st_value r = query(pos*2+1, middle+1, end, a, b);
+    return merge(l, r);
+}
+
+// ---------------------------------------------------------
+
+int main() {
+    int q;
+    cin >> n >> q;
+    vector<int> sequence;
+    sequence.push_back(0); // sentinela para sequence[0]
+
+    // construir sequencia de números
+    for (int i = 0; i < n; i++) {
+        int number;
+        cin >> number;
+        sequence.push_back(number);
+    }
+
+    vector<tuple<int,int,int>> queries;
+    set<int> query_set;
+
+    // construir vector de queries (para responder depois)
+    // construir query_set (para saber que números tenho de responder na segtree)
+    for (int i = 0; i < q; i++) {
+        tuple<int,int,int> query;
+        int a, b, k;
+        cin >> a >> b >> k;
+
+        get<0>(query) = a;
+        get<1>(query) = b;
+        get<2>(query) = k;
+
+        queries.push_back(query);
+        query_set.insert(k);
+    }
+
+    // construir um dicionário para ser mais fácil saber o índice dos queries
+    map<int,int> query_dictionary;
+    int counter = 0;
+    for (auto x : query_set) {
+        query_dictionary.insert({x, counter});
+        counter++;
+    }
+
+    // construir o array v[] para o build() da segtree
+    for (int i = 1; i <= n; i++) {
+        vector<int> v_k;
+        for (auto x : query_set) {
+            if (sequence[i] > x) {
+                v_k.push_back(1);
+            } else {
+                v_k.push_back(0);
+            }
+        }
+        v[i] = v_k;
+    }
+
+    build(1, 1, n);
+
+    for (auto x : queries) {
+        int a, b, k;
+        tie(a, b, k) = x;
+
+        vector<int> query_result = query(1, 1, n, a, b);
+        int index = query_dictionary[k];
+        int result = query_result[index];
+
+        cout << result << "\n";
+    }
+    return 0;
+}
+```
+== Cumulative Sums
+```cpp
+// Construir a matriz de somas cumulativas.
+// Fixar duas linhas da matriz, e usar Kadane como se as colunas delimitadas por essas
+// linhas fossem elementos únicos (a soma da coluna).
+
+// soma de uma coluna j, desde i_start até i_end
+int column(vector<vector<int>> & sums, int i_start, int i_end, int j) {
+    return sums[i_end][j] - sums[i_start-1][j] - sums[i_end][j-1] + sums[i_start-1][j-1];
+}
+
+// kadane numa dimensão 'n', delimitada por duas linhas 'a' e 'b'
+int kadane(vector<vector<int>> & sums, int size, int a, int b) {
+    int current_sum = column(sums, a, b, 1);
+    int best_sum = current_sum;
+
+    for (int n = 2; n <= size; n++) {
+        current_sum = max(column(sums, a, b, n), current_sum + column(sums, a, b, n));
+        best_sum = max(best_sum, current_sum);
+    }
+
+    return best_sum;
+}
+
+
+int main() {
+    int n;
+    cin >> n;
+
+    // construir matriz e matriz de somas acumuladas
+    vector<vector<int>> cumSums(n + 1, vector<int>(n + 1, 0));
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            int num;
+            cin >> num;
+            cumSums[i][j] = num + cumSums[i][j-1];
+        }
+    }
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= n; j++) {
+            cumSums[j][i] = cumSums[j][i] + cumSums[j-1][i];
+        }
+    }
+
+    int max_sum = -101;
+
+    // fixar linhas (a e b) e usar Kadane nessa dimensão
+    for (int a = 1; a <= n; a++) {
+        for (int b = a; b <= n; b++) {
+            int sum_at = kadane(cumSums, n, a, b);
+            if (sum_at > max_sum) {
+                max_sum = sum_at;
+            }
+        }
+    }
+
+    cout << max_sum << "\n";
+    return 0;
+}
+```
+== Binary Indexed Tree
+```cpp
+// Guardar as arestas num dicionário, assim ficam ordenadas por 'n'.
+//
+// Uma aresta NiMi vai ter intersecções se as arestas anteriores forem do tipo NkMj, com k < i e j > i.
+// k < i é garantindo porque estamos a percorrer as arestas ordenadas por 'n'.
+// Só temos de verificar quantos valores j > i apareceram até agora.
+//
+// Ou seja, quantas arestas que começam em nós anteriores de N acabam em nós posteriores de M.
+// Só precisamos de guardar as frequências dos 'm' que apareceram até agora (numa BIT) e,
+// para cada aresta NM, perguntar quantos 'm' maiores que M apareceram.
+//
+// Ou seja, fazer um range query a uma BIT tree do tipo sum[l,r] (que é sum[0,r] - sum[0,l-1])
+//
+// Para os updates, temos de guardar os valores de 'm' num stack temporário e só fazer updates
+// se o 'n' seguinte for diferente. Isto porque, por exemplo, as arestas 3,1 e 3,2 não se intersectam.
+
+#define ll long long int
+
+// Implementação da BIT
+
+vector<ll> tree;
+ll maxIdx;
+
+ll read(ll idx) {
+    ll sum = 0;
+    while (idx > 0) {
+        sum += tree[idx];
+        idx -= (idx & -idx);
+    }
+    return sum;
+}
+
+ll sum(ll l, ll r) {
+    return read(r) - read(l - 1);
+}
+
+void update(ll idx, ll val) {
+    while (idx <= maxIdx) {
+        tree[idx] += val;
+        idx += (idx & -idx);
+    }
+}
+
+int main() {
+    ll n, m, k;
+    cin >> n >> m >> k;
+
+    maxIdx = m;
+    multimap<ll,ll> roads;
+    tree.assign(m+1, 0);
+
+    for (ll i = 0; i < k; i++) {
+        ll n1, m1;
+        cin >> n1 >> m1;
+        roads.insert({n1, m1});
+    }
+
+    stack<ll> temp_update;
+    ll prev = 0;
+    ll crossing_sum = 0;
+
+    for (auto x : roads) {
+        if (x.first != prev) {
+            while (!temp_update.empty()) {
+                update(temp_update.top(), 1);
+                temp_update.pop();
+            }
+        }
+
+        ll temp_sum = sum(x.second + 1, maxIdx);
+        crossing_sum += temp_sum;
+
+        temp_update.push(x.second);
+        prev = x.first;
+
+    }
+    cout << crossing_sum << "\n";
+    return 0;
+}
+```
+== Longest Common Subsequence
+```cpp
+#define INF 1e6 + 4
+
+vector<int> alice_seq;
+vector<int> bob_seq;
+vector<vector<int>> dp;
+
+void receive_seq(vector<int> &seq, int sz) {
+    seq.push_back(-INF);
+    for (int i = 1; i <= sz; i++) {
+        int num;
+        cin >> num;
+        seq.push_back(num);
+    }
+}
+
+// longest common subsequence, recursivo com memoization
+// i: índice na sequência da alice
+// j: índice na sequência do bob
+int lcs_rec(int i, int j) {
+    // caso base
+    // se uma ou ambas as sequências estiverem vazias.
+    // não pode ser zero porque podemos ter respostas negativas.
+    if (i == 0 || j == 0) {
+        return -INF;
+    }
+    // memoization
+    // verificar na tabela dp se a resposta já foi calculada
+    if (dp[i][j] != -INF) {
+        return dp[i][j];
+    }
+    // 3 hipóteses:
+    // 1) usar os números dos índices indicados: o nosso valor total vai incrementar da multiplicação
+    // (ou vai ser melhor que um valor muito negativo), continuar a procurar em i-1, j-1
+    // 2) descartar o número 'j' do bob, continuar a procurar em i, j-1
+    // 3) descartar o número 'i' da alice, continuar a procurar em i-1, j
+    int use_both = max(alice_seq[i] * bob_seq[j] + lcs_rec(i-1, j-1), alice_seq[i] * bob_seq[j]);
+    int use_alice = lcs_rec(i, j-1);
+    int use_bob = lcs_rec(i-1, j);
+    // retornar e guardar o valor em dp ao mesmo tempo
+    return dp[i][j] = max(use_both, max(use_alice, use_bob));
+}
+
+int main() {
+    int n;
+    cin >> n;
+    receive_seq(alice_seq, n);
+
+    int m;
+    cin >> m;
+    receive_seq(bob_seq, m);
+    // tabela de memoization, usar 'inf' por causa dos valores negativos
+    dp.assign(n+1, vector<int> (m+1, -INF));
+
+    cout << lcs_rec(n, m) << "\n";
+    return 0;
+}
+```
+== Bellman-Ford
+```cpp
+// Estrutura do Grafo do Professor Pedro Ribeiro
+//
+// Bellman-Ford aplicado quase directamente, trocar só a inicialização dos nós para -inf
+// porque é um problema de maximização.
+//
+// Na verificação de ciclos, só retornar -1 se o relaxamento existir (obviamente) mas também só se:
+// 1) o nó relaxado consegue chegar ao nó final E
+// 2) o nó inicial consegue chegar ao nó relaxado
+// estas condições são verificadas com um DFS reaches_n(v, z) que verifica se um nó v consegue
+// chegar ao nó z.
+
+#define INF LONG_LONG_MAX
+typedef long long ll;
+
+// Classe que representa um no
+class Node {
+public:
+    list<pair<int, int>> adj;  // Lista de adjacencias
+    ll distance;              // Distancia ao no origem da pesquisa
+    int parent;
+    int visited;
+};
+
+// Classe que representa um grafo
+class Graph {
+public:
+    int n;          // Numero de nos do grafo
+    Node *nodes;    // Array para conter os nos
+
+    Graph(int n) { // Constructor: chamado quando um objeto Graph for criado
+        this->n = n;
+        nodes = new Node[n+1];  // +1 se os nos comecam em 1 ao inves de 0
+    }
+    
+    ~Graph() { // Destructor: chamado quando um objeto Graph for destruido
+        delete[] nodes;
+    }
+    
+    void addLink(int a, int b, int c) {
+        nodes[a].adj.push_back({b,c});
+    }
+
+    bool dfs(int v, int z) {
+        if (v == z) {
+            return true;
+        }
+        nodes[v].visited = true;
+        for (auto e : nodes[v].adj) {
+            if (!nodes[e.first].visited && dfs(e.first, z)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool reaches_n(int v, int z) {
+        // cout << "testar se " << v << " chega a " << z << "\n";
+        for (int i = 1; i <= n; i++) {
+            nodes[i].visited = false;
+        }
+        bool reaches = dfs(v, z);
+        // cout << reaches << "\n";
+        return reaches;
+    }
+
+    // Bellman-Ford
+    ll bellman_ford() {
+
+        // inicializar nós a -inf, estamos à procura da pontuação máxima
+        for (int i = 1; i <= n; i++) {
+            nodes[i].distance = -INF;
+        }
+        // pontuação inicial
+        nodes[1].distance = 0;
+        nodes[1].parent = 0;
+
+        // percorrer todas as arestas V-1 vezes
+        for (int i = 1; i < n; i++) {
+            for (int v = 1; v <= n; v++) {
+                for (auto e : nodes[v].adj) {
+                    int neighbour = e.first;
+                    int score = e.second;
+                    if (nodes[v].distance + score > nodes[neighbour].distance) {
+                        nodes[neighbour].distance = nodes[v].distance + score;
+                        nodes[neighbour].parent = v;
+                    }
+                }
+            }
+        }
+
+        // detetar ciclos - fazer uma última iteração de todas as arestas
+        for (int v = 1; v <= n; v++) {
+            for (auto e : nodes[v].adj) {
+                int neighbour = e.first;
+                int score = e.second;
+                // retornar -1 só se o nó estiver envolvido no caminho de maior pontuação
+                if (reaches_n(neighbour, n) && reaches_n(1, v) && nodes[v].distance + score > nodes[neighbour].distance) {
+                    return -1;
+                }
+            }
+        }
+        return nodes[n].distance;
+    }
+};
+
+int main() {
+    int n, e, a, b, c;
+    
+    cin >> n;
+    Graph g(n);
+    cin >> e;
+    for (int i=0; i<e; i++) {
+        cin >> a >> b >> c;
+        g.addLink(a, b, c);
+    }
+
+    cout << g.bellman_ford() << "\n";
+
+    return 0;
+}
+```
+== Grafo Bipartido
+```cpp
+// Usei a implementação de Edmonds-Karp do Professor Pedro Ribeiro de DAA.
+//
+// Só modifiquei a inserção de dados no grafo, para transformar os inputs desta maneira:
+// O número de nós do grafo é 2n+2. 2n porque é um grafo bipartido. 
+// Por exemplo, para o caso de teste:
+// 5
+// 5
+// 0 1
+// 1 2
+// 2 3
+// 3 4
+// 4 2
+//
+// 5 nós e 5 arestas tranformam-se em 10 nós e 5 arestas:
+//
+//            1     6
+//            2     7  
+//            3     8
+//            4     9  
+//            5     10
+//
+// com arestas 1-7, 2-8, 3-9, 4-10, 5-8
+// 
+// Para transformar este grafo num problema de fluxo máximo (com capacidades unitárias)
+// temos de adicionar dois nós guarda:
+//
+//            1     6
+//            2     7 
+//      0     3     8     11
+//            4     9
+//            5     10
+//
+// e arestas do nó 0 para os nós 1..5 e dos nós 6..10 para o nó 11.
+//
+// Depois é só resolver um problema de fluxo máximo, onde as capacidades das arestas são 1,
+// e se o fluxo final for igual a 'n' então conseguimos distribuir todos os livros por todas
+// as pessoas.
+
+// Classe que representa um grafo
+class Graph {
+public:
+    int n;                    // Numero de nos do grafo
+    vector<vector <int>> adj; // Lista de adjacencias
+    vector<vector <int>> cap; // Matriz de capacidades
+
+    Graph(int n) {
+        this->n = n;
+        adj.resize(n); // +1 se os nos comecam em 1 ao inves de 0
+        cap.resize(n);
+        for (int i=0; i<n; i++) cap[i].resize(n);
+    }
+    
+    void addLink(int a, int b, int c) {
+        // adjacencias do grafo nao dirigido, porque podemos ter de andar no sentido
+        // contrario ao procurarmos caminhos de aumento
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+        cap[a][b] = c;
+    }
+
+    // BFS para encontrar caminho de aumento
+    // devolve valor do fluxo nesse caminho
+    int bfs(int s, int t, vector<int> &parent) {
+        for (int i=0; i<n; i++) parent[i] = -1;
+
+        parent[s] = -2;         
+        queue<pair<int, int>> q; // fila do BFS com pares (no, capacidade)
+        q.push({s, INT_MAX});    // inicializar com no origem e capacidade infinita
+
+        while (!q.empty()) {
+            // returar primeiro no da fila
+            int cur = q.front().first;
+            int flow = q.front().second;
+            q.pop();
+
+            // percorrer nos adjacentes ao no atual (cur)
+            for (int next : adj[cur]) {
+                // se o vizinho ainda nao foi visitado (parent==-1)
+                // e a aresta respetiva ainda tem capacidade para passar fluxo
+                if (parent[next] == -1 && cap[cur][next]>0) {
+                parent[next] = cur;                        // atualizar pai
+                int new_flow = min(flow, cap[cur][next]);  // atualizar fluxo
+                if (next == t) return new_flow;            // chegamos ao final?
+                q.push({next, new_flow});                  // adicionar a fila
+                }
+            }
+        }        
+        return 0;
+    }
+    
+    // Algoritmo de Edmonds-Karp para fluxo maximo entre s e t
+    // devolve valor do fluxo maximo (cap[][] fica com grafo residual)
+    int maxFlow(int s, int t) {
+        int flow = 0;             // fluxo a calcular
+        vector<int> parent(n+1);  // vetor de pais (permite reconstruir caminho)
+        
+        while (true) {
+            int new_flow = bfs(s, t, parent); // fluxo de um caminho de aumento
+            if (new_flow == 0) break;         // se nao existir, terminar
+
+            // imprimir fluxo e caminho de aumento
+            // cout << "Caminho de aumento: fluxo " << new_flow << " | " << t;
+            
+            flow += new_flow;  // aumentar fluxo total com fluxo deste caminho
+            int cur = t;
+            while (cur != s) { // percorrer caminho de aumento e alterar arestas
+                int prev = parent[cur];	
+                cap[prev][cur] -= new_flow;
+                cap[cur][prev] += new_flow;
+                cur = prev;
+                // cout << " <- " << cur; // imprimir proximo no do caminho
+            }
+            // cout << endl;
+        }        
+        return flow;
+    }
+};
+
+int main() {
+    int tests;
+    cin >> tests;
+
+    for (int t = 0; t < tests; t++) {        
+        int n, e, a, b;
+        cin >> n;
+        // grafo bipartido com nós guarda
+        Graph g(2*n+2);
+        cin >> e;
+        for (int i=0; i<e; i++) {
+            cin >> a >> b;
+            // grafo bipartido com capacidades unitárias
+            g.addLink(a+1, b+1+n, 1);
+        }
+        // adicionar arestas dos nós guardas (0 e 2n+1)
+        for (int i = 1; i <= n; i++) {
+            g.addLink(0, i, 1);
+            g.addLink(i+n, 2*n+1, 1);
+        }
+        // resolver fluxo máximo no grafo bipartido
+        int flow = g.maxFlow(0, 2*n+1);
+        // se o fluxo for igual a 'n', conseguimos distribuir todos os livros
+        if (flow != n) {
+            cout << "NO\n";
+        }
+        else {
+            cout << "YES\n";
+        }
+    } 
     return 0;
 }
 ```
