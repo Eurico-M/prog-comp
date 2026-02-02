@@ -10,7 +10,6 @@
 // chegar ao nó z.
 
 #include <bits/stdc++.h>
-#include <climits>
 
 using namespace std;
 

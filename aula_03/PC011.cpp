@@ -15,7 +15,6 @@
 // Complexidade total: O(n.log n + n.log n) = O(n.log n);
 
 #include <bits/stdc++.h>
-#include <vector>
 using namespace std;
 
 typedef struct {

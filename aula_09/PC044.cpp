@@ -1,3 +1,5 @@
+// Encontrar o custo mínimo num 'grafo' com valores não negativos: Dijkstra.
+
 #include <bits/stdc++.h>
 using namespace std;
 

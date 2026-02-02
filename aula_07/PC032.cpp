@@ -1,3 +1,10 @@
+// Dinamic Programming recursiva com memoization
+// A matriz DP guarda o número de jogadas para chegar à posição i com velocidade j.
+// Para cada valor de incremento de velocidade, verificar se a jogada é válida.
+// Se for, calcular recursivamente o número mínimo de jogadasaté chegar à linha de meta
+// (ou ultrapassá-la).
+// Não esquecer de aumentar o número o número de jogadas em cada descida recursiva.
+
 #include <bits/stdc++.h>
 using namespace std;
 

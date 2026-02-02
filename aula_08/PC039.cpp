@@ -1,3 +1,7 @@
+// Criar um grafo dirigido que representa as precedências que podemos deduzir a partir do input.
+// Se X aparece antes de Z, então há uma aresta XZ.
+// A solução é a ordem topológica deste grafo.
+
 #include <bits/stdc++.h>
 using namespace std;
 
