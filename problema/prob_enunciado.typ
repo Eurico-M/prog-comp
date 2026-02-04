@@ -1,9 +1,15 @@
 #set page(
-  paper: "a4"
+  paper: "a4",
+  numbering: "1/1"
 )
 
-
 = T-shirts de Programação Competitiva
+
+== Editorial
+
+Este problema pretende ser uma aplicação mais ou menos direta dos grafos bipartidos, inspirado no problema PC047 das aulas.
+
+A construção do grafo exige um pouco mais de trabalho e cuidado, e o resultado exige um uso da matriz de capacidades, para além do valor do fluxo máximo.
 
 == Enunciado
 
@@ -36,3 +42,19 @@ Por exemplo, o input:
 ```
 
 quer dizer que temos 5 t-shirts para distribuir por 5 dias, com 4 restrições. A t-shirt 1 tem de ser usada no dia 2, a t-shirt 2 tem de ser usada no dia 3, a t-shirt 3 tem de ser usada no dia 4, a t-shirt 4 tem de ser usada no dia 5. A t-shirt 5 não aparece nas restrições, portanto pode ser usada em qualquer dia.
+
+== Output
+
+O output deve ser uma lista das t-shirts a usar, por ordem crescente dos dias. Se não for possível usar uma t-shirt diferente todos os dias, deve aparecer apenas o número zero.
+
+Para o exemplo do input acima, o output deve ser:
+
+```
+5
+1
+2
+3
+4
+```
+
+que indica que a t-shirt 5 deve ser usada no primeiro dia, a t-shirt 1 deve ser usada no segundo dia, etc.
