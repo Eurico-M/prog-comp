@@ -5,7 +5,7 @@
 
 = T-shirts de Programação Competitiva
 
-== Editorial
+== (Editorial)
 
 Este problema pretende ser uma aplicação mais ou menos direta dos grafos bipartidos, inspirado no problema PC047 das aulas.
 
@@ -58,3 +58,21 @@ Para o exemplo do input acima, o output deve ser:
 ```
 
 que indica que a t-shirt 5 deve ser usada no primeiro dia, a t-shirt 1 deve ser usada no segundo dia, etc.
+
+== (Editorial)
+
+=== Casos de teste e limites:
+
+Criei dois casos de testes simples (os ficheiros .txt neste diretório).
+
+Escrevi um pequeno programa (`gerar-grafos.cpp`) que recebe 3 números como argumentos (T-shirts, Dias, Restrições) e faz output de um conjunto aleatório de números conforme descrito no Input.
+
+A solução implementada por mim parece-me correr em $O(V E^2)$, que é a complexidade do algoritmo de Edmonds-Karp.
+
+Como tal, os limites podem ser semelhantes aos limites do problema PC047:
+
+$2 <= T, D <= 1000$ 
+
+$1 <= R <= 10000$
+
+No entanto, é preciso notar que cada t-shirt $T$ que não tenha uma restrição $R$ introduz $D$ arestas no grafo. (Porque, pelo menos na minha implementação, "não ter restrições" quer dizer que a t-shirt pode ser usada em qualquer dia e portanto adiciono uma aresta dessa t-shirt para cada dia)

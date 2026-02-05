@@ -1,3 +1,21 @@
+// A resolução deste problema é parecida com a resolução do exercício PC047.
+// Ou seja, grafo bipartido.
+//
+// A construção do grafo, para além dos nós guarda s e t que é preciso adicionar,
+// também envolve adicionar arestas em todos os nós de t-shirts que não estão
+// restringidas.
+//
+// A solução envolve, nesta implementação em particular do grafo, usar a matriz
+// de capacidades para determinar as arestas usadas pelo fluxo.
+// Assim, é possível dizer que t-shirts usar em cada dia.
+// Se o fluxo for inferior ao número de dias, então não é possível usar uma
+// t-shirt diferente todos os dias.
+//
+// Edmonds-Karp corre em O(VE^2).
+// Adicionar nós guarda e nós de t-shirts não restringidas: O(TD) (T-shirts e Dias)
+// Percorrer a matriz capacidades para devolver lista de output: O(TD)
+// Como V = T + D, a complexidade é ditada pelo algoritmo de Edmonds-Karp: O(VE^2)
+
 #include <bits/stdc++.h>
 
 using namespace std;
@@ -68,7 +86,7 @@ public:
             if (new_flow == 0) break;         // se nao existir, terminar
 
             // imprimir fluxo e caminho de aumento
-            cout << "Caminho de aumento: fluxo " << new_flow << " | " << t;
+            // cout << "Caminho de aumento: fluxo " << new_flow << " | " << t;
             
             flow += new_flow;  // aumentar fluxo total com fluxo deste caminho
             int cur = t;
@@ -77,9 +95,9 @@ public:
                 cap[prev][cur] -= new_flow;
                 cap[cur][prev] += new_flow;
                 cur = prev;
-                cout << " <- " << cur; // imprimir proximo no do caminho
+                // cout << " <- " << cur; // imprimir proximo no do caminho
             }
-            cout << endl;
+            // cout << endl;
         }
         
         return flow;
@@ -95,64 +113,64 @@ int main() {
     Graph g(t_shirts + dias + 2);
 
     vector<bool>t_shirts_restringidas(t_shirts + 1, false);
-    cout << "restrições:\n";
+    // cout << "restrições:\n";
     for (int i = 0; i < restr; i++) {
         int a, b;
         cin >> a >> b;
         // grafo bipartido com capacidades unitárias
         g.addLink(a, b + t_shirts, 1);
-        cout << "addLink(" << a << ", " << b+t_shirts << ")\n";
+        // cout << "addLink(" << a << ", " << b+t_shirts << ")\n";
         t_shirts_restringidas[a] = true;
     }
-    cout << "nós guarda:\n";
+    // cout << "nós guarda:\n";
     // adicionar arestas dos nós guardas (0 e t_shirts + dias + 1)
     for (int i = 1; i <= t_shirts; i++) {
         g.addLink(0, i, 1);
-        cout << "addLink(" << 0 << ", " << i << ")\n";
+        // cout << "addLink(" << 0 << ", " << i << ")\n";
         // adicionar arestas das t-shirts não restringidas
         if (!t_shirts_restringidas[i]) {
-            cout << i << " é não restringida:\n";
+            // cout << i << " é não restringida:\n";
             for (int j = 1; j <= dias; j++) {
                 g.addLink(i, t_shirts + j, 1);
-                cout << "   addLink(" << i << ", " << t_shirts+j << ")\n";
+                // cout << "   addLink(" << i << ", " << t_shirts+j << ")\n";
             }
         }
     }
     for (int i = 1; i <= dias; i++) {
         g.addLink(t_shirts + i , t_shirts + dias + 1, 1);
-        cout << "addLink(" << t_shirts + i << ", " << t_shirts + dias + 1 << ")\n";
+        // cout << "addLink(" << t_shirts + i << ", " << t_shirts + dias + 1 << ")\n";
     }
 
-    cout << "grafo:\n";
-    for (int i = 0; i < t_shirts + dias + 2; i++) {
-        cout << i;
-        for (int j : g.adj[i]) {
-            cout << " <- " << j;
-        }
-        cout << "\n";
-    }
+    // cout << "grafo:\n";
+    // for (int i = 0; i < t_shirts + dias + 2; i++) {
+    //     cout << i;
+    //     for (int j : g.adj[i]) {
+    //         cout << " <- " << j;
+    //     }
+    //     cout << "\n";
+    // }
 
     // resolver fluxo máximo no grafo bipartido
     int flow = g.maxFlow(0, t_shirts + dias + 1);
-    cout << "Fluxo maximo: " << flow << "\n";
+    // cout << "Fluxo maximo: " << flow << "\n";
 
-    cout << "cap[][]:\n";
-    for (auto x : g.cap) {
-        for (auto y : x) {
-            cout << " " << y;
-        }
-        cout << "\n";
-    }
+    // cout << "cap[][]:\n";
+    // for (auto x : g.cap) {
+    //     for (auto y : x) {
+    //         cout << " " << y;
+    //     }
+    //     cout << "\n";
+    // }
 
     if (flow < dias) {
         cout << 0 << "\n";
-    } 
+    }
     else {
         for (int i = 1; i <= dias; i++) {
             int no = t_shirts + i;
             for (int j = 1; j <= t_shirts; j++) {
                 if (g.cap[no][j] == 1) {
-                    cout << "dia " << no << " -> t-shirt ";
+                    // cout << "dia " << no << " -> t-shirt ";
                     cout << j << "\n";
                     break;
                 }
