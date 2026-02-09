@@ -63,31 +63,15 @@ int main() {
             heights[y] = x;
         }
 
-        // percorrer o map de pontos e construir um vector de encostas, mantendo a ordem
-        // uma encosta é quando y1 > y2, para x1 e x2 consecutivos
-        vector<pair<pdd, pdd>> slopes;
-        auto it = points.begin();
-        for (int i = 0; i < points.size() - 1; i++) {
-            auto it_next = next(it);
+        auto highest_peak = heights.begin();
 
-            if (it->second > it_next->second) {
-                pdd A = {it->first, it->second};
-                pdd B = {it_next->first, it_next->second};
-                slopes.push_back({A, B});
-            }
+        while (next(highest_peak) != points.end()) {
 
-            it = it_next;
         }
 
-        double exposed = 0;
-        auto itslopes = slopes.begin();
-        for (int i = 0; i < slopes.size() - 1; i++) {
-            auto itslopes_next = next(itslopes);
+        double sum_sunny_slopes;
 
-            
 
-            itslopes = itslopes_next;
-        }
     }
 
     return 0;
