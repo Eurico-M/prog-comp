@@ -1,12 +1,14 @@
-//https://www.geeksforgeeks.org/dsa/program-for-point-of-intersection-of-two-lines/
+
 
 #include <bits/stdc++.h>
+#include <iterator>
 
 using namespace std;
 
 #define pdd pair<double, double>
 
 // calcular intersecção de duas rectas
+// https://www.geeksforgeeks.org/dsa/program-for-point-of-intersection-of-two-lines/
 pdd lineLineIntersection(pdd A, pdd B, pdd C, pdd D)
 {
     // Line AB represented as a1x + b1y = c1
@@ -35,6 +37,10 @@ pdd lineLineIntersection(pdd A, pdd B, pdd C, pdd D)
     }
 }
 
+// distância entre dois pontos
+double distance(pdd A, pdd B) {
+    return sqrt((A.first-B.first)*(A.first-B.first)+(A.second-B.second)*(A.second-B.second));
+}
 
 int main() {
     // Fast IO
@@ -52,25 +58,83 @@ int main() {
         cin >> n;
 
         // points é ordenado por x
-        map<double,double> points;
-        // heights é inversamente ordenado por y
-        map<double,double,greater<double>> heights;
+        map<double,double> points;        
         for (int i = 0; i < n; i++) {
             double x, y;
             cin >> x >> y;
 
             points[x] = y;
+        }
+
+        // heights é inversamente ordenado por y.
+        // ciclo separado: se houver 2 pontos com a mesma altura,
+        // ficam ordenados por x de forma crescente.
+        map<double,double,greater<double>> heights;
+        for (auto p : points) {
+            double x = p.first;
+            double y = p.second;
+
             heights[y] = x;
         }
 
-        auto highest_peak = heights.begin();
+        double sum_sunny_slopes = 0;
 
-        while (next(highest_peak) != points.end()) {
+        auto k1 = points.begin();
+        // retirar o maior pico de heights
+        pdd highest_peak = *heights.begin();
+        heights.erase(heights.begin());
+        // não esquecer que heights é do tipo {y,x}
+        swap(highest_peak.first, highest_peak.second);
+
+        // encontrar o maior pico em points
+        while (k1->first != highest_peak.first) {
+            k1 = next(k1);
+        }     
+
+        // percorrer os pontos da esquerda para a direita
+        while (next(k1) != points.end()) {            
+
+            // a encosta do maior pico é a recta AB
+            pdd A = *k1;
+            pdd B = *next(k1);
+
+            // o segundo maior pico bloqueia os raios de sol
+            pdd second_highest_peak = *heights.begin();
+
+            // fazer pop dos pontos que já ultrapassámos (em x)
+            while (second_highest_peak.second < highest_peak.first) {
+                heights.erase(heights.begin());
+                second_highest_peak = *heights.begin();
+            }
+            heights.erase(heights.begin());
+            swap(second_highest_peak.first, second_highest_peak.second);
+
+            // simular o raio de sol "limite", i.e., a linha horizontal
+            // que passa no segundo maior pico, como uma recta CD
+            // onde C é o segundo maior pico
+            pdd C = second_highest_peak;
+            // e D é um valor com a mesma altura mas x = -1 (por exemplo)
+            pdd D = {-1, second_highest_peak.second};
+
+            // a intersecção do "último raio de sol" com a encosta do maior pico
+            // dá-nos o ponto da encosta onde o lado da montanha ensolarado acaba
+            pdd X = lineLineIntersection(A, B, C, D);
+
+            // a distância "ensolarada" é a distância entre A e X
+            double sunny_slope = distance(A, X);
+            // fazer update da variável "global"
+            sum_sunny_slopes += sunny_slope;
+
+            // fazer andar o ponteiro em points para o segundo maior pico
+            // (que agora passa a ser o maior pico)
+            while (k1->first != second_highest_peak.first) {
+                k1 = next(k1);
+            }
 
         }
 
-        double sum_sunny_slopes;
-
+        cout.precision(2);
+        cout << fixed << sum_sunny_slopes << "\n";
 
     }
 
